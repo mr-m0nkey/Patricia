@@ -11,7 +11,7 @@ if(isset($_SESSION['user_id'])){
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if(isset($_POST['submit'])) {
-    
+
     $username = test_input(filter_input(INPUT_POST, 'username'));
     $email = test_input(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
     $passy = test_input(filter_input(INPUT_POST, 'passy'));
