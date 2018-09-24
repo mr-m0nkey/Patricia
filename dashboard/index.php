@@ -1,3 +1,8 @@
+<?php
+
+include_once('../assets/include/config.php');
+
+?>
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -57,7 +62,7 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
@@ -281,7 +286,7 @@
                                         <!-- <h3>Select Currency to Exchange</h3> -->
                                         <form class="form-horizontal form-x">
                                             <div class="form-group">
-                                                <label class="col-md-12">{{convertFrom}} / {{convertTo}}: <span class="text-color">1.0</span> <span class="help pull-right"> Rate: <span class="text-color">2%</span></span></label>
+                                                <label class="col-md-12">{{convertFrom}} / {{convertTo}}: <span class="text-color">{{rate}}</span> <span class="help pull-right"> Rate: <span class="text-color">2%</span></span></label>
                                                 <div class="col-md-12">
                                                     <input type="text" class="form-control" value="12.00"> </div>
                                             </div>
@@ -307,7 +312,7 @@
                                             <p class="text-bold">or pay into this wallet address</p>
                                             <p class="qr-address">FHNDSKFD232MNDSDK2E2KS1021</p>
                                         </div>
-        
+
                                         <!-- Scan to Pay -->
                                     </div>
                                 </div>
@@ -460,7 +465,7 @@
 
 
             });
-            
+
 
             $('#myTable').DataTable();
             $(document).ready(function () {
@@ -508,14 +513,40 @@
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ]
         });
+
     </script>
 
     <script type="text/javascript">
+
+    function getCode(code){
+      switch(code) {
+        case "BTC":
+            return code
+            break;
+        case "PM":
+            return "pm_USD";
+            break;
+        case "US":
+            return "USD";
+            break;
+        case "NGN":
+            return code;
+            break;
+        case "Cedis":
+            return "GHS";
+            break;
+        default:
+            return null;
+        }
+    }
+
+
 
     var data = {
         test: "Hello World",
         convertFrom: null,
         convertTo: null,
+        rate: 0.0,
         showMobileMenu: true
 
     }
@@ -530,7 +561,29 @@
         },
         mounted() {
         },
+        watch: {
+          convertFrom: function(value){
+            if(data.convertTo !== null){
+
+              $.get("<?=$app_root?>/assets/include/converter.php",{ from: getCode(value), to: getCode(data.convertTo) },function(d, s, x){
+                console.log(d);
+                data.rate = JSON.parse(d).rate;
+              });
+            }
+          },
+
+          convertTo: function(value){
+            if(data.convertFrom !== null){
+              $.get("<?=$app_root?>/assets/include/converter.php",{ from: getCode(data.convertFrom), to: getCode(value) }, function(d, s, x){
+                console.log(d);
+                data.rate = JSON.parse(d).rate;
+              });
+            }
+          },
+        }
     })
+
+
 </script>
 
 

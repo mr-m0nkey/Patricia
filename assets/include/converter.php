@@ -1,5 +1,5 @@
 <?php
-
+//debug_backtrace() || die ("Direct access not permitted");
 require('ChangerAPI.php');
 require('../../vendor/autoload.php');
 
@@ -81,6 +81,14 @@ function roundAbout($from, $to){
 function convert($from, $to, $amount){
   return getRate($from, $to) * $amount;
 }
+
+if(isset($_GET['from']) && isset($_GET['to'])){
+  $from = $_GET['from'];
+  $to = $_GET['to'];
+  $json['rate'] = getRate($from, $to);
+  echo json_encode($json);
+}
+
 
 
 
