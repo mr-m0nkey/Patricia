@@ -6,7 +6,7 @@ include_once('assets/include/validation.php');
 
 if(isset($_SESSION['user_id'])){
   // TODO: check if the id is valid
-  header('location: dashboard.php');
+  header('location: dashboard/index.php');
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,11 +19,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // TODO: create functions to check if the username and email already exist in the database(to improve readability)
     try{
-      $stmt = $db->prepare("SELECT username FROM users");
-      $stmt->execute();
+      $stmt = $db->prepare("SELECT username FROM users where username = ?");
+      $stmt->execute([$username]);
       if(!$stmt->rowCount()){
-        $stmt = $db->prepare("SELECT username FROM users");
-        $stmt->execute();
+        $stmt = $db->prepare("SELECT email FROM users where email = ?");
+        $stmt->execute([$email]);
         if(!$stmt->rowCount()){
           $stmt = $db->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
           $stmt->execute([$username, sha1($passy), $email]);
@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           $get = $stmt->fetch(PDO::FETCH_OBJ);
           // TODO: use reference instead of id
           $_SESSION['user_id'] = $get->id;
-            header('location: dashboard/index.html');
+            header('location: dashboard/index.php');
         }else{
           $_SESSION['email_err'] = "Email exists";
         }
@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       }
     }catch(Exception $ex){
       $_SESSION['login_err'] = "An error occured";
+      die($ex->getMessage());
     }
   }
 }
@@ -81,7 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar navbar-expand-lg bg-white fixed-top navbar-transparent" color-on-scroll="10">
         <div class="container">
             <div class="navbar-translate">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="index.php">
                     <img src="assets/img/patriciax-logo.png" class="img-fluid img-white" alt="">
                     <img src="assets/img/patriciax-logo-blue.png" class="img-fluid img-blue" alt="">
                 </a>
@@ -95,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="collapse navbar-collapse justify-content-end" id="navigation" data-nav-image="./assets/img/blurred-image-1.jpg">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link page-scroll" href="index.html#currencies">
+                        <a class="nav-link page-scroll" href="index.php#currencies">
                             <p>Currencies</p>
                         </a>
                     </li>
@@ -105,17 +106,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="faq.html" class="nav-link" style="font-size: 14px;">
+                        <a href="faq.php" class="nav-link" style="font-size: 14px;">
                            FAQ
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.html" style="font-size: 14px;">
+                        <a class="nav-link" href="login.php" style="font-size: 14px;">
                             Log In
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-white" href="signup.html">
+                        <a class="nav-link btn btn-white" href="signup.php">
                             <p>Sign Up</p>
                         </a>
                     </li>
@@ -161,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                             </form>
                             <p>Already have an Account?
-                                <a class="login" href="login.html">Log In</a>
+                                <a class="login" href="login.php">Log In</a>
                             </p>
                         </div>
                     </div>

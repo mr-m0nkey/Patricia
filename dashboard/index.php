@@ -1,7 +1,9 @@
 <?php
-
+session_start();
 include_once('../assets/include/config.php');
-
+if(!isset($_SESSION['user_id'])){
+    header('location: ../index.php');
+}
 ?>
 <!DOCTYPE html>
 <!--
@@ -72,7 +74,7 @@ include_once('../assets/include/config.php');
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="index.html">
+                    <li><a class="logo" href="index.php">
                         <img class="dash-logo-view" src="plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -139,27 +141,27 @@ include_once('../assets/include/config.php');
                                     <div class="u-text">
                                         <h4>Horpey Jobs</h4>
                                         <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <a href="profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="profile.html">
+                                <a href="profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="history.html">
+                                <a href="history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="settings.html">
+                                <a href="settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="#">
+                                <a href="../logout.php">
                                     <i class="fa fa-power-off"></i> Logout</a>
                             </li>
                         </ul>
@@ -196,13 +198,13 @@ include_once('../assets/include/config.php');
                         </a>
                     </li>
                     <li>
-                        <a href="history.html" class="waves-effect">
+                        <a href="history.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-history fa-fw"></i>
                             <span class="hide-menu">History </span>
                         </a>
                     </li>
                     <li>
-                        <a href="profile.html" class="waves-effect">
+                        <a href="profile.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account fa-fw"></i>
                             <span class="hide-menu">Profile </span>
                         </a>
@@ -227,7 +229,7 @@ include_once('../assets/include/config.php');
                         </button> -->
                         <ol class="breadcrumb">
                             <li class="">
-                                <a href="index.html">Dashboard</a>
+                                <a href="index.php">Dashboard</a>
                             </li>
                             <li class="active">Exchange</li>
                         </ol>
@@ -288,11 +290,11 @@ include_once('../assets/include/config.php');
                                             <div class="form-group">
                                                 <label class="col-md-12">{{convertFrom}} / {{convertTo}}: <span class="text-color">{{rate}}</span> <span class="help pull-right"> Rate: <span class="text-color">2%</span></span></label>
                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control" value="12.00"> </div>
+                                                    <input type="text" class="form-control" value="0" v-model="amount"> </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control" value="3000"> </div>
+                                                    <input type="text" class="form-control" value="0" v-model="equivalent"> </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-md-12">
@@ -547,6 +549,8 @@ include_once('../assets/include/config.php');
         convertFrom: null,
         convertTo: null,
         rate: 0.0,
+        amount: 0,
+        equivalent: 0,
         showMobileMenu: true
 
     }
@@ -567,7 +571,10 @@ include_once('../assets/include/config.php');
 
               $.get("<?=$app_root?>/assets/include/converter.php",{ from: getCode(value), to: getCode(data.convertTo) },function(d, s, x){
                 console.log(d);
-                data.rate = JSON.parse(d).rate;
+                data.rate = JSON.parse(d).ratetoFixed(2);
+                var i = data.rate * data.amount;
+                data.equivalent = i.toFixed(2);
+                console.log(data.amount);
               });
             }
           },
@@ -576,10 +583,18 @@ include_once('../assets/include/config.php');
             if(data.convertFrom !== null){
               $.get("<?=$app_root?>/assets/include/converter.php",{ from: getCode(data.convertFrom), to: getCode(value) }, function(d, s, x){
                 console.log(d);
-                data.rate = JSON.parse(d).rate;
+                data.rate = JSON.parse(d).rate.toFixed(2);
+                var i =data.rate * data.amount;
+                data.equivalent = i.toFixed(2);
+                console.log(data.amount);
               });
             }
           },
+
+          amount: function(value){
+            var i = value * data.rate;
+            data.equivalent = i.toFixed(2);
+          }
         }
     })
 

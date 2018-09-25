@@ -5,7 +5,7 @@ include_once('assets/include/config.php');
 include_once('assets/include/validation.php');
 
 if(isset($_SESSION['user_id'])){
-    header('location: dashboard.php');
+    header('location: dashboard/index.php');
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           if($hashed_password === sha1($passy)){
             // TODO: use user_ref to keep track of sessions
               $_SESSION['user_id'] = $get->id;
-              header('location: dashboard/index.html');
+              header('location: dashboard/index.php');
           }else{
                   //incorrect username and password combination
                   $_SESSION['login_err'] = "Incorrect username and/or password";
@@ -78,7 +78,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <nav class="navbar navbar-expand-lg bg-white fixed-top navbar-transparent" color-on-scroll="10">
         <div class="container">
             <div class="navbar-translate">
-                <a class="navbar-brand" href="index.html">
+                <a class="navbar-brand" href="index.php">
                     <img src="assets/img/patriciax-logo.png" class="img-fluid img-white" alt="">
                     <img src="assets/img/patriciax-logo-blue.png" class="img-fluid img-blue" alt="">
                 </a>
@@ -92,7 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="collapse navbar-collapse justify-content-end" id="navigation" data-nav-image="./assets/img/blurred-image-1.jpg">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link page-scroll" href="index.html#currencies">
+                        <a class="nav-link page-scroll" href="index.php#currencies">
                             <p>Currencies</p>
                         </a>
                     </li>
@@ -102,17 +102,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="faq.html" class="nav-link" style="font-size: 14px;">
+                        <a href="faq.php" class="nav-link" style="font-size: 14px;">
                            FAQ
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="login.html" style="font-size: 14px;">
+                        <a class="nav-link" href="login.php" style="font-size: 14px;">
                             Log In
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-white" href="signup.html">
+                        <a class="nav-link btn btn-white" href="signup.php">
                             <p>Sign Up</p>
                         </a>
                     </li>
@@ -141,7 +141,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <label class="control-label text-bold">Password</label>
                                     <input type="password" class="form-control sign-input" name="passy" id="passy">
                                     <p class="mt-3">
-                                        <a class="logii" href="forgot.html">Forgot Password? Click Here</a>
+                                        <a class="logii" href="forgot.php">Forgot Password? Click Here</a>
                                     </p>
                                 </div>
                                 <div class="form-group label-floating mt-2">
@@ -149,7 +149,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 </div>
                             </form>
                             <p>Dont have have an Account?
-                                <a class="logii" href="signup.html">Sign Up</a>
+                                <a class="logii" href="signup.php">Sign Up</a>
                             </p>
                         </div>
                     </div>
