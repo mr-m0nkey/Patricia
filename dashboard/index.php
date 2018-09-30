@@ -129,7 +129,7 @@ if(!isset($_SESSION['user_id'])){
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
                             <img src="plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <b class="hidden-xs"><?=$_SESSION['username']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
@@ -139,8 +139,8 @@ if(!isset($_SESSION['user_id'])){
                                         <img src="plugins/images/users/horpey.jpg" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
+                                        <h4><?=$_SESSION['username']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
                                         <a href="profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
@@ -294,15 +294,15 @@ if(!isset($_SESSION['user_id'])){
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control" value="0" v-model="equivalent"> </div>
+                                                    <input type="text" id="equivalent" class="form-control" value="0" v-model="equivalent" disabled> </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control" placeholder="USD Account Number"> </div>
+                                                    <input type="text" id="usd-account-number" value="" class="form-control" placeholder="USD Account Number"> </div>
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-md-12">
-                                                    <input type="text" class="form-control" placeholder="Email Address"> </div>
+                                                    <input type="text" id="email-address" value="" class="form-control" placeholder="Email Address"> </div>
                                             </div>
                                             <button class="btn btn-block btn-orange btn-exchange">Exchange</button>
                                         </form>
@@ -382,27 +382,25 @@ if(!isset($_SESSION['user_id'])){
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>0.32</td>
-                                            <td>BTC</td>
-                                            <td>USD</td>
-                                            <td>$1200</td>
-                                            <td class="pending">Pending</td>
-                                        </tr>
-                                        <tr>
-                                            <td>0.32</td>
-                                            <td>BTC</td>
-                                            <td>USD</td>
-                                            <td>$1200</td>
-                                            <td class="pending">Pending</td>
-                                        </tr>
-                                        <tr>
-                                            <td>0.32</td>
-                                            <td>BTC</td>
-                                            <td>USD</td>
-                                            <td>$1200</td>
-                                            <td class="completed">Completed</td>
-                                        </tr>
+                                      <?php
+                                      $stmt = $db->prepare("SELECT equivalence, transfer_from, transfer_to, usd_account_number, email, amount, status  FROM history WHERE user_id = ?");
+                                      $stmt->execute([$_SESSION['user_id']]);
+                                      if($stmt->rowCount()){
+                                          $history = $stmt->fetchAll(PDO::FETCH_OBJ);
+                                      }else{
+                                        $history = [];
+                                      }
+                                       ?>
+
+                                       <?php foreach($history as $h){?>
+                                         <tr>
+                                             <td><?=$h->amount?></td>
+                                             <td><?=$h->transfer_from?></td>
+                                             <td><?=$h->transfer_to?></td>
+                                             <td><?=$h->equivalence?></td>
+                                             <td class="<?=$h->status?>"><?=$h->status?></td>
+                                         </tr>
+                         											<?php	}	?>
                                     </tbody>
                                 </table>
                             </div>
@@ -462,9 +460,24 @@ if(!isset($_SESSION['user_id'])){
 
             $( ".btn-exchange" ).click(function( event ) {
                 event.preventDefault();
-                $('.form-x').slideUp();
-                $('.scan-code').slideDown();
+                if(!document.getElementById('email-address').value || !document.getElementById('usd-account-number').value || !document.getElementById('equivalent').value){
+                  // TODO: vakidation
+                }else {
+                  var send = {
+                    from: getCode(data.convertFrom),
+                    to: getCode(data.convertTo),
+                    usd: document.getElementById('usd-account-number').value,
+                    email: document.getElementById('email-address').value,
+                    amount: data.amount,
+                    equivalent: document.getElementById('equivalent').value
+                  }
+                  $.post("<?=$app_root?>/assets/include/exchange.php",send,function(d, s, x){
 
+                  });
+                  $('.form-x').slideUp();
+                  $('.scan-code').slideDown();
+
+                }
 
             });
 
@@ -569,9 +582,9 @@ if(!isset($_SESSION['user_id'])){
           convertFrom: function(value){
             if(data.convertTo !== null){
 
-              $.get("<?=$app_root?>/assets/include/converter.php",{ from: getCode(value), to: getCode(data.convertTo) },function(d, s, x){
+              $.post("<?=$app_root?>/assets/include/converter.php",{ from: getCode(value), to: getCode(data.convertTo) },function(d, s, x){
                 console.log(d);
-                data.rate = JSON.parse(d).ratetoFixed(2);
+                data.rate = JSON.parse(d).ratetoFixed(4);
                 var i = data.rate * data.amount;
                 data.equivalent = i.toFixed(2);
                 console.log(data.amount);
@@ -581,9 +594,9 @@ if(!isset($_SESSION['user_id'])){
 
           convertTo: function(value){
             if(data.convertFrom !== null){
-              $.get("<?=$app_root?>/assets/include/converter.php",{ from: getCode(data.convertFrom), to: getCode(value) }, function(d, s, x){
+              $.post("<?=$app_root?>/assets/include/converter.php",{ from: getCode(data.convertFrom), to: getCode(value) }, function(d, s, x){
                 console.log(d);
-                data.rate = JSON.parse(d).rate.toFixed(2);
+                data.rate = JSON.parse(d).rate.toFixed(4);
                 var i =data.rate * data.amount;
                 data.equivalent = i.toFixed(2);
                 console.log(data.amount);

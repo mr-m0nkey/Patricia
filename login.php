@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = test_input(filter_input(INPUT_POST, 'email'));
     $passy = test_input(filter_input(INPUT_POST, 'passy'));
     try{
-          $stmt = $db->prepare("SELECT id, email, password FROM users WHERE email = ?");
+          $stmt = $db->prepare("SELECT id, username, email, password FROM users WHERE email = ?");
           $stmt->execute([$email]);
           if($stmt->rowCount()){
           $get = $stmt->fetch(PDO::FETCH_OBJ);
@@ -22,6 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           if($hashed_password === sha1($passy)){
             // TODO: use user_ref to keep track of sessions
               $_SESSION['user_id'] = $get->id;
+              $_SESSION['username'] = $get->username;
+              $_SESSION['email'] = $get->email;
               header('location: dashboard/index.php');
           }else{
                   //incorrect username and password combination
@@ -131,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         <div class="card-body">
                             <h3 class="m-0">Login</h3>
                             <hr class="mb-4">
-                            
+
                             <form action="" method="post">
                                 <div class="form-group label-floating">
                                     <label class="control-label text-bold">Email Address</label>
