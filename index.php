@@ -1,3 +1,6 @@
+<?php
+include_once('assets/include/config.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,6 +28,8 @@
 
      <!-- Scroll -->
     <link href="assets/scroll/scrolling-nav.css" rel="stylesheet">
+
+    <script src="dashboard/js/vue.min.js"></script>
 
 </head>
 
@@ -81,7 +86,7 @@
             </div>
             <div class="container">
                 <div class="content-center brand text-left">
-                    <div class="row">
+                    <div class="row" id="exchange">
                         <div class="col-md-5">
                             <p class="text-greyy safer">The Faster, cheaper and Safer way to</p>
                             <h1 class="mb-2 exh">Exchange <a href="" class="typewrite text-color" data-period="2000" data-type='["Bitcoin", "Dollar","Cedis"]'>
@@ -89,27 +94,29 @@
                               </a></h1>
                             <!-- Exchange Input -->
                             <div class="btn-group select-wide" role="group" aria-label="Basic example">
-                                <select class="form-control br-l patri-select partss partss-r" id="exampleFormControlSelect1">
-                                  <option>USD</option>
-                                  <option>BTC</option>
-                                  <option>ETH</option>
-                                  <option>NGN</option>
-                                  <option>RMB</option>
+                                <select class="form-control br-l patri-select partss partss-r" v-model="from_currency">
+                                  <option value="USD">USD</option>
+                                  <option value="BTC">BTC</option>
+                                  <option value="ETH">ETH</option>
+                                  <option value="NGN">NGN</option>
+                                  <option value="GHS">GHS</option>
+                                  <option value="RMB">RMB</option>
                                 </select>
-                                <select class="form-control patri-select partss partss-l" id="exampleFormControlSelect1">
-                                  <option>USD</option>
-                                  <option selected="">BTC</option>
-                                  <option>ETH</option>
-                                  <option>NGN</option>
-                                  <option>RMB</option>
+                                <select class="form-control patri-select partss partss-l" v-model="to_currency">
+                                  <option value="USD">USD</option>
+                                  <option value="BTC">BTC</option>
+                                  <option value="ETH">ETH</option>
+                                  <option value="NGN">NGN</option>
+                                  <option value="GHS">GHS</option>
+                                  <option value="RMB">RMB</option>
                                 </select>
                             </div>
                             <p class="total">Total fee 2% - $6</p>
                             <div class="btn-group select-wide" role="group" aria-label="Basic example">
-                                <input type="number" class= " quantity form-control br-l patri-select text-color partss partss-r" placeholder="Value" ">
-                                <input type="number" class= " quantity form-control patri-select text-color partss partss-l" placeholder="Converted Value" ">
+                                <input type="number" class= " quantity form-control br-l patri-select text-color partss partss-r" placeholder="Value" v-model="from_amount">
+                                <input type="number" class= " quantity form-control patri-select text-color partss partss-l" placeholder="Converted Value" v-model="to_amount.toFixed(2)">
                             </div>
-                            <p>Exchange rate - 1$ /1BTC</p>
+                            <p>Exchange rate - 1{{from_currency}} /{{rate.toFixed(2)}}{{to_currency}}</p>
                             <a class="nav-link btn btn-lg btn-orange text-left" href="#">Get Started
                                 <span class="pull-right fa fa-chevron-right"></span>
                             </a>
@@ -418,6 +425,29 @@
             $('.img-white').show();
         }
     });
+
+    var app = new Vue({
+        el: '#exchange',
+        data: {
+          from_currency: "USD",
+          to_currency: "BTC",
+          from_amount: 0,
+          to_amount: 0,
+          rate: 1
+        },
+
+        watch: {
+          from_amount: function(value){
+            $.post("<?=$app_root?>assets/include/converter.php",{ from: app.from_currency, to: app.to_currency },function(d, s, x){
+              response = JSON.parse(d);
+              app.to_amount = value * response.rate;
+              app.rate = response.rate;
+            });
+
+          }
+        }
+
+    })
 </script>
 
 </html>
