@@ -3,12 +3,11 @@
 session_start();
 include_once('config.php');
 
-require('ChangerAPI.php');
-require('../../vendor/autoload.php');
 
+require('../../vendor/autoload.php');
 $dotenv = new Dotenv\Dotenv("../../");
 $dotenv->load();
-$Changer_API = new ChangerAPI();
+
 //currencies
 $currency['perfect_money'] = "pm_USD";
 $currency['bitcoin'] = "BTC";
@@ -38,7 +37,10 @@ function getRate($from, $to){
 
 function getRateChangerApi($from, $to){
   try {
-      $rate = $Changer_API->getRate($from, $to);
+    require('ChangerAPI.php');
+    $Changer_API = new ChangerAPI();
+
+      $rate = $Changer_API->getRate($from, $to)->rate;
       return $rate;
   } catch (Exception $e) {
       echo 'ERROR: '. $e->getMessage();

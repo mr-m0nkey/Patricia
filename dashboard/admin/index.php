@@ -1,3 +1,22 @@
+<?php
+session_start();
+include_once('../../assets/include/config.php');
+//if(!isset($_SESSION['user_id'])){
+  //  header('location: ../index.php');
+//}
+$stmt = $db->prepare("SELECT COUNT(*) FROM users ;");
+$stmt->execute();
+$user_count = $stmt->fetchAll()[0][0];
+$stmt = $db->prepare("SELECT COUNT(*) FROM history WHERE status = 'pending' ;");
+$stmt->execute();
+$pending_count = $stmt->fetchAll()[0][0];
+$stmt = $db->prepare("SELECT COUNT(*) FROM history WHERE status = 'completed' ;");
+$stmt->execute();
+$completed_count = $stmt->fetchAll()[0][0];
+$stmt = $db->prepare("SELECT COUNT(*) FROM history WHERE status = 'declined' ;");
+$stmt->execute();
+$declined_count = $stmt->fetchAll()[0][0];
+?>
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -57,7 +76,7 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
@@ -243,7 +262,7 @@
                                 <h3 class="box-title mt-0 text-bold">Total Registered Users</h3>
                                 <ul class="list-inline two-part">
                                     <li>
-                                        <span class="text-danger">3000</span>
+                                        <span class="text-danger"><?=$user_count?></span>
                                     </li>
                                 </ul>
                             </div>
@@ -256,7 +275,7 @@
                                 <h3 class="box-title mt-0 text-bold">Completed Transactions</h3>
                                 <ul class="list-inline two-part">
                                     <li>
-                                        <span class="text-success">300</span>
+                                        <span class="text-success"><?=$completed_count?></span>
                                     </li>
                                 </ul>
                             </div>
@@ -269,7 +288,7 @@
                                 <h3 class="box-title mt-0 text-bold">Pending Transactions</h3>
                                 <ul class="list-inline two-part">
                                     <li>
-                                        <span class="text-yellow">120</span>
+                                        <span class="text-yellow"><?=$pending_count?></span>
                                     </li>
                                 </ul>
                             </div>
@@ -283,7 +302,7 @@
                                 <h3 class="box-title mt-0 text-bold">Declined Transactions</h3>
                                 <ul class="list-inline two-part">
                                     <li>
-                                        <span class="text-danger">0</span>
+                                        <span class="text-danger"><?=$declined_count?></span>
                                     </li>
                                 </ul>
                             </div>
@@ -311,36 +330,28 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>Seyike</td>
-                                            <td>ssojirin@gmail.com</td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>WRBDKD89DNSKDK</td>
-                                            <td class="pending">Pending</td>
-                                        </tr>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>Horpey</td>
-                                            <td>adeniran.opeyemi.ao@gmail.com</td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>WRBDKD89DNSKDK</td>
-                                            <td class="completed">Completed</td>
-                                        </tr>
+                                      <?php
+                                      $stmt = $db->prepare("SELECT users.username, users.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time FROM history LEFT OUTER JOIN users ON history.user_id = users.id");
+                                      $stmt->execute();
+                                      if($stmt->rowCount()){
+                                          $history = $stmt->fetchAll(PDO::FETCH_OBJ);
+                                      }else{
+                                        $history = [];
+                                      }
+                                       ?>
+
+                                       <?php foreach($history as $h){?>
                                          <tr>
-                                            <td>08-12-18</td>
-                                            <td>Kiki</td>
-                                            <td>kik@gmail.com</td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>WRBDKD89DNSKDK</td>
-                                            <td class="failed">Declined</td>
-                                        </tr>
+                                             <td>08-12-18</td>
+                                             <td><?=$h->username?></td>
+                                             <td><?=$h->email?></td>
+                                             <td><?=$h->transfer_from?>-<?=$h->transfer_to?></td>
+                                             <td><?=$h->amount?></td>
+                                             <td><?=$h->equivalence?></td>
+                                             <td><?=$h->usd_account_number?></td>
+                                             <td class="<?=$h->status?>"><?=$h->status?></td>
+                                         </tr>
+                         											<?php	}	?>
                                     </tbody>
                                 </table>
                             </div>
@@ -405,7 +416,7 @@
 
 
             });
-            
+
 
             $('#myTable').DataTable();
             $(document).ready(function () {

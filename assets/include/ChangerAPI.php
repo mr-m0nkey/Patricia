@@ -11,16 +11,16 @@ class ChangerAuth
         $this->_ApiSecure = $ApiSecure;
         $this->_ApiTimestamp = $ApiTimestamp;
     }
-    
+
     public function getApiKey() {
         return $this->_ApiKey;
     }
-    
+
     public function getApiSecure() {
         return $this->_ApiSecure;
     }
-    
-    public function getApiTimestamp() {   
+
+    public function getApiTimestamp() {
         if($this->_ApiTimestamp)
 			return $this->_ApiTimestamp;
 		else
@@ -29,13 +29,13 @@ class ChangerAuth
 }
 
 class ChangerAPI
-{    
+{
     private $_Auth;
-    
+
     public function __construct(ChangerAuth $auth = null) {
         $this->_Auth = $auth;
     }
-    
+
     private function _createHeaders($apiMethod, $apiData) {
 		$sign = hash_hmac('sha256', $apiMethod.':'.http_build_query($apiData).':'.$this->_Auth->getApiTimestamp(), $this->_Auth->getApiSecure());
         return array(
@@ -44,13 +44,13 @@ class ChangerAPI
 			'Api-Timestamp: ' . $this->_Auth->getApiTimestamp()
 		);
     }
-    
+
     private function _getResponse($apiMethod, $apiData = array()) {
         if (!function_exists('curl_init')) {
             die("Please install cURL library. Visit http://php.net/manual/en/book.curl.php for more informations.");
             return false;
         }
-        
+
         $apiURL = 'https://www.changer.com' . $apiMethod;
 
         $ch = curl_init();
@@ -66,9 +66,9 @@ class ChangerAPI
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        
+
         $apiRes = curl_exec($ch);
-        
+
         if (!curl_errno($ch)) {
             $response_info = curl_getinfo($ch);
             if ($response_info['http_code'] != 200) {
@@ -80,22 +80,22 @@ class ChangerAPI
 
         return $apiRes;
     }
-    
-    private function _parseResponse($apiRes) {      
+
+    private function _parseResponse($apiRes) {
         $jsonRes = json_decode($apiRes);
-		
+
         if ($jsonRes === null)
             throw new Exception('Could not load API response.');
         if (isset($jsonRes->error) && $jsonRes->error !== false)
             throw new Exception($jsonRes->error);
-		
+
         return $jsonRes;
     }
 
     public function getRate($send, $receive) {
         $apiRes = $this->_getResponse('/api/v2/rates/'.$send.'/'.$receive);
         $jsonRes = $this->_parseResponse($apiRes);
-		
+
 		return $jsonRes;
     }
 

@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = test_input(filter_input(INPUT_POST, 'email'));
     $passy = test_input(filter_input(INPUT_POST, 'passy'));
     try{
-          $stmt = $db->prepare("SELECT id, username, email, password FROM users WHERE email = ?");
+          $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
           $stmt->execute([$email]);
           if($stmt->rowCount()){
           $get = $stmt->fetch(PDO::FETCH_OBJ);
@@ -24,6 +24,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               $_SESSION['user_id'] = $get->id;
               $_SESSION['username'] = $get->username;
               $_SESSION['email'] = $get->email;
+              $_SESSION['first_name'] = $get->first_name;
+              $_SESSION['last_name'] = $get->last_name;
+              $_SESSION['location'] = $get->location;
+              $_SESSION['state'] = $get->state;
               header('location: dashboard/index.php');
           }else{
                   //incorrect username and password combination

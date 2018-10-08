@@ -129,7 +129,7 @@ if(!isset($_SESSION['user_id'])){
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
                             <img src="plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs"><?=$_SESSION['username']?></b>
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
@@ -139,7 +139,7 @@ if(!isset($_SESSION['user_id'])){
                                         <img src="plugins/images/users/horpey.jpg" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4><?=$_SESSION['username']?></h4>
+                                        <h4><?=$_SESSION['first_name']?>  <?=$_SESSION['last_name']?></h4>
                                         <p class="text-muted"><?=$_SESSION['email']?></p>
                                         <a href="profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
@@ -279,6 +279,12 @@ if(!isset($_SESSION['user_id'])){
                                                 <label class="label-for" for="cedis" name="convertFrom">Ghana Cedis</label>
                                             </div>
                                         </li>
+                                        <li>
+                                            <div class="radio radio-hide radio-circle radio-info">
+                                                <input value="Renminbi" v-model="convertFrom" class="radiocheck" id="renminbi" name="convertFrom" type="radio">
+                                                <label class="label-for" for="renminbi" name="convertFrom">Renminbi</label>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -363,6 +369,12 @@ if(!isset($_SESSION['user_id'])){
                                                 <label class="label-for" for="cedis2" name="convertTo">Ghana Cedis</label>
                                             </div>
                                         </li>
+                                        <li>
+                                            <div class="radio radio-hide radio-circle radio-info">
+                                                <input value="Renminbi" v-model="convertTo" class="radiocheck" id="renminbi2" name="convertTo" type="radio">
+                                                <label class="label-for" for="renminbi2" name="convertTo">Renminbi</label>
+                                            </div>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -426,6 +438,13 @@ if(!isset($_SESSION['user_id'])){
     <!-- /#wrapper -->
 </div>
 
+<script>
+
+
+
+
+</script>
+
     </body>
     <!-- jQuery -->
     <script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
@@ -455,27 +474,17 @@ if(!isset($_SESSION['user_id'])){
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
     <!-- end - This is for export functionality only -->
+
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <script>
         $(document).ready(function () {
 
             $( ".btn-exchange" ).click(function( event ) {
                 event.preventDefault();
                 if(!document.getElementById('email-address').value || !document.getElementById('usd-account-number').value || !document.getElementById('equivalent').value){
-                  // TODO: vakidation
+                  // TODO: validation
                 }else {
-                  var send = {
-                    from: getCode(data.convertFrom),
-                    to: getCode(data.convertTo),
-                    usd: document.getElementById('usd-account-number').value,
-                    email: document.getElementById('email-address').value,
-                    amount: data.amount,
-                    equivalent: document.getElementById('equivalent').value
-                  }
-                  $.post("<?=$app_root?>/assets/include/exchange.php",send,function(d, s, x){
-
-                  });
-                  $('.form-x').slideUp();
-                  $('.scan-code').slideDown();
+                  pay();
 
                 }
 
@@ -532,6 +541,62 @@ if(!isset($_SESSION['user_id'])){
     </script>
 
     <script type="text/javascript">
+
+
+    function pay(){
+      if(getCode(data.convertFrom) === "NGN" || getCode(data.convertFrom) === "USD" || getCode(data.convertFrom) === "GHS"){
+        payWithPaystack();
+      }else{
+        $('.form-x').slideUp();
+        $('.scan-code').slideDown();
+        var send = {
+          from: getCode(data.convertFrom),
+          to: getCode(data.convertTo),
+          usd: document.getElementById('usd-account-number').value,
+          email: document.getElementById('email-address').value,
+          amount: data.amount,
+          equivalent: document.getElementById('equivalent').value,
+          reference: response.reference
+        }
+        $.post("<?=$app_root?>/assets/include/exchange.php",send,function(d, s, x){
+
+        });
+      }
+
+
+
+    }
+
+    function payWithPaystack(){
+
+      var handler = PaystackPop.setup({
+        key: 'pk_test_bf7678f6e0542ee6771c8b072931e4f3fd0f67df',
+        email: document.getElementById('email-address').value,
+        amount: data.amount * 100,
+        currency: getCode(data.convertFrom),
+
+        callback: function(response){
+            var send = {
+              from: getCode(data.convertFrom),
+              to: getCode(data.convertTo),
+              usd: document.getElementById('usd-account-number').value,
+              email: document.getElementById('email-address').value,
+              amount: data.amount,
+              equivalent: document.getElementById('equivalent').value,
+              reference: response.reference
+            }
+            $.post("<?=$app_root?>/assets/include/exchange.php",send,function(d, s, x){
+
+            });
+        },
+        onClose: function(){
+
+        }
+      });
+      handler.openIframe();
+    }
+
+  //  payWithPaystack();
 
     function getCode(code){
       switch(code) {

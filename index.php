@@ -1,5 +1,24 @@
 <?php
 include_once('assets/include/config.php');
+include_once('assets/include/validation.php');
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if(isset($_POST['submit'])) {
+    $name = test_input(filter_input(INPUT_POST, 'name'));
+    $mail = test_input(filter_input(INPUT_POST, 'mail'));
+    $message = test_input(filter_input(INPUT_POST, 'message'));
+
+    try{
+      $stmt = $db->prepare("INSERT INTO messages (email, name, message) VALUES (?, ?, ?)");
+      $stmt->execute([$mail, $name, $message]);
+    }catch(Exception $ex){
+
+
+    }
+
+  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -114,7 +133,7 @@ include_once('assets/include/config.php');
                             <p class="total">Total fee 2% - $6</p>
                             <div class="btn-group select-wide" role="group" aria-label="Basic example">
                                 <input type="number" class= " quantity form-control br-l patri-select text-color partss partss-r" placeholder="Value" v-model="from_amount">
-                                <input type="number" class= " quantity form-control patri-select text-color partss partss-l" placeholder="Converted Value" v-model="to_amount.toFixed(2)">
+                                <input type="number" class= " quantity form-control patri-select text-color partss partss-l" placeholder="Converted Value" v-model="to_amount.toFixed(2)" disabled>
                             </div>
                             <p>Exchange rate - 1{{from_currency}} /{{rate.toFixed(2)}}{{to_currency}}</p>
                             <a class="nav-link btn btn-lg btn-orange text-left" href="#">Get Started
@@ -351,18 +370,18 @@ include_once('assets/include/config.php');
                             <h4 class="modal-title" id="myModalLabel">Contact Us</h4>
                           </div>
                           <div class="modal-body">
-                            <form>
+                            <form method="post" action="">
                                 <div class="form-group">
-                                    <input type="text" class= "form-control-md form-control contact-input partss" placeholder="Name" ">
+                                    <input type="text" class= "form-control-md form-control contact-input partss" placeholder="Name" name="name">
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class= "form-control-md form-control contact-input partss" placeholder="Email Address" ">
+                                    <input type="email" class= "form-control-md form-control contact-input partss" placeholder="Email Address"  name="mail">
                                 </div>
                                 <div class="form-group"><!--
                                     <input type="email" class= "form-control-md form-control contact-input partss" placeholder="Email Address" "> -->
-                                    <textarea class="form-control message-in" placeholder="Message" name="" rows="10"></textarea>
+                                    <textarea class="form-control message-in" placeholder="Message" rows="10" name="message"></textarea>
                                 </div>
-                                <button class="nav-link btn btn-lg btn-orange text-center btn-block">Send a Message</button>
+                                <button class="nav-link btn btn-lg btn-orange text-center btn-block" name="submit">Send a Message</button>
                             </form>
                           </div>
                           <!-- <div class="modal-footer">

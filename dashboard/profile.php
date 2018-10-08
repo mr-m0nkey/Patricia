@@ -1,3 +1,12 @@
+<?php
+session_start();
+include_once('../assets/include/config.php');
+if(!isset($_SESSION['user_id'])){
+    header('location: ../index.php');
+}
+
+
+?>
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -58,7 +67,7 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
@@ -68,7 +77,7 @@
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="index.html">
+                    <li><a class="logo" href="index.php">
                         <img class="dash-logo-view" src="plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -123,7 +132,7 @@
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
                             <img src="plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
@@ -133,24 +142,24 @@
                                         <img src="plugins/images/users/horpey.jpg" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <h4><?=$_SESSION['first_name']?>  <?=$_SESSION['last_name']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
+                                        <a href="profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="profile.html">
+                                <a href="profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="history.html">
+                                <a href="history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="settings.html">
+                                <a href="settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
@@ -186,19 +195,19 @@
                 </div>
                 <ul class="nav" id="side-menu">
                     <li>
-                        <a href="index.html" class="waves-effect">
+                        <a href="index.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Exchange </span>
                         </a>
                     </li>
                     <li>
-                        <a href="history.html" class="waves-effect">
+                        <a href="history.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-history fa-fw"></i>
                             <span class="hide-menu">History </span>
                         </a>
                     </li>
                     <li>
-                        <a href="profile.html" class="waves-effect">
+                        <a href="profile.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account fa-fw"></i>
                             <span class="hide-menu">Profile </span>
                         </a>
@@ -223,7 +232,7 @@
                         </button> -->
                         <ol class="breadcrumb">
                             <li class="">
-                                <a href="index.html">Dashboard</a>
+                                <a href="index.php">Dashboard</a>
                             </li>
                             <li class="active">Profile</li>
                         </ol>
@@ -250,7 +259,7 @@
                                     </div>
                                     <div class="col-md-5 col-sm-5 col-xs-4">
                                         <div class="profile-action">
-                                            <a href="updateProfile.html" class="btn btn-white btn-exchange">
+                                            <a href="updateProfile.php" class="btn btn-white btn-exchange">
                                                 <span class="fa fa-edit"></span>
                                             </a>
                                             <a href="#" class="btn btn-white btn-exchange">
@@ -262,23 +271,23 @@
                                 <div class="row">
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Full Name</strong>
                                         <br>
-                                        <p class="text-muted">Adeniran Opeyemi</p>
+                                        <p class="text-muted"><?=$_SESSION['first_name']?>  <?=$_SESSION['last_name']?></p>
                                     </div>
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Username</strong>
                                         <br>
-                                        <p class="text-muted">@tha_ui_guy</p>
+                                        <p class="text-muted">@<?=$_SESSION['username']?></p>
                                     </div>
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Email ID</strong>
                                         <br>
-                                        <p class="text-muted">adeniran.opeyemi.ao@gmail.com</p>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
                                     </div>
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Location</strong>
                                         <br>
-                                        <p class="text-muted">Nigeria</p>
+                                        <p class="text-muted"><?=$_SESSION['location']?></p>
                                     </div>
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>State</strong>
                                         <br>
-                                        <p class="text-muted">Lagos State</p>
+                                        <p class="text-muted"><?=$_SESSION['state']?></p>
                                     </div>
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Notification</strong>
                                         <br>
@@ -288,7 +297,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <a href="updateProfile.html" class="btn btn-orange btn-exchange">Update Account Settings</a>
+                                <a href="updateProfile.php" class="btn btn-orange btn-exchange">Update Account Settings</a>
                             </div>
                         </div>
                     </div>
