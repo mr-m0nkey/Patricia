@@ -1,3 +1,67 @@
+<?php
+session_start();
+include_once('../assets/include/config.php');
+include_once('../assets/include/upload.php');
+include_once('../assets/include/validation.php');
+include_once('../assets/include/helpers.php');
+
+if(!isset($_SESSION['user_id'])){
+    header('location: ../index.php');
+}
+
+if(isset($_POST['submit'])){
+  $first_name = test_input(filter_input(INPUT_POST, 'first_name'));
+  $last_name = test_input(filter_input(INPUT_POST, 'last_name'));
+  $username = test_input(filter_input(INPUT_POST, 'username'));
+  $email = test_input(filter_input(INPUT_POST, 'email'));
+  $location = test_input(filter_input(INPUT_POST, 'location'));
+  $state = test_input(filter_input(INPUT_POST, 'state'));
+  $notifications = test_input(filter_input(INPUT_POST, 'notifications'));
+  $avatar = $_SESSION['avatar'];
+  if(!empty($_FILES['picture'])){
+    $upload = uploadImage($_FILES['picture'], $_SESSION['avatar']);
+    if($upload !== false){
+      $avatar = $upload;
+    }
+  }
+  try{
+    $stmt = $db->prepare("SELECT username FROM users where username = ?");
+    $stmt->execute([$username]);
+    if(!$stmt->rowCount() || $username == $_SESSION['username']){
+      $stmt = $db->prepare("SELECT email FROM users where email = ?");
+      $stmt->execute([$email]);
+      if(!$stmt->rowCount() || $email == $_SESSION['email']){
+        $stmt = $db->prepare("UPDATE users SET username = ?, first_name = ?, last_name = ?, email = ?, location = ?, state = ?, notifications = ?, avatar = ? where username = ?");
+
+        $stmt->execute([$username, $first_name, $last_name, $email, $location, $state, $notifications, $avatar, $_SESSION['username']]);
+        $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        $get = $stmt->fetch(PDO::FETCH_OBJ);
+        // TODO: use reference instead of id
+        $_SESSION['user_id'] = $get->id;
+        $_SESSION['username'] = $get->username;
+        $_SESSION['email'] = $get->email;
+        $_SESSION['first_name'] = $get->first_name;
+        $_SESSION['last_name'] = $get->last_name;
+        $_SESSION['location'] = $get->location;
+        $_SESSION['state'] = $get->state;
+        $_SESSION['notifications'] = $get->notifications;
+        $_SESSION['avatar'] = $get->avatar;
+      }else{
+        $_SESSION['email_err'] = "Email exists";
+      }
+    }else{
+        $_SESSION['username_err'] = "Username exists";
+    }
+  }catch(Exception $ex){
+    $_SESSION['login_err'] = "An error occured";
+    die($ex->getMessage());
+  }
+}
+
+
+?>
+
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -58,7 +122,7 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
@@ -68,7 +132,7 @@
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="index.html">
+                    <li><a class="logo" href="index.php">
                         <img class="dash-logo-view" src="plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -100,7 +164,7 @@
                                 <div class="message-center">
                                     <a href="#">
                                         <div class="user-img">
-                                            <img src="plugins/images/users/horpey.jpg" alt="user" class="img-circle">
+                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
                                             <span class="profile-status online pull-right"></span>
                                         </div>
                                         <div class="mail-contnet">
@@ -122,40 +186,40 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
-                            <img src="plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="plugins/images/users/horpey.jpg" alt="user" />
+                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <h4><?=$_SESSION['first_name']?>  <?=$_SESSION['last_name']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
+                                        <a href="profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="profile.html">
+                                <a href="profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="history.html">
+                                <a href="history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="settings.html">
+                                <a href="settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="#">
+                                <a href="<?=$app_root?>logout.php">
                                     <i class="fa fa-power-off"></i> Logout</a>
                             </li>
                         </ul>
@@ -186,19 +250,19 @@
                 </div>
                 <ul class="nav" id="side-menu">
                     <li>
-                        <a href="index.html" class="waves-effect">
+                        <a href="index.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Exchange </span>
                         </a>
                     </li>
                     <li>
-                        <a href="history.html" class="waves-effect">
+                        <a href="history.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-history fa-fw"></i>
                             <span class="hide-menu">History </span>
                         </a>
                     </li>
                     <li>
-                        <a href="profile.html" class="waves-effect">
+                        <a href="profile.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account fa-fw"></i>
                             <span class="hide-menu">Profile </span>
                         </a>
@@ -223,7 +287,7 @@
                         </button> -->
                         <ol class="breadcrumb">
                             <li class="">
-                                <a href="index.html">Dashboard</a>
+                                <a href="index.php">Dashboard</a>
                             </li>
                             <li class="active">Profile</li>
                         </ol>
@@ -238,19 +302,21 @@
                     <div class="col-sm-8">
                         <div class="panel wallet-widgets p-0">
                             <div class="panel-body" style="min-height: 120px;">
+                              <form class="form-horizontal form-material" action="" method="post" enctype="multipart/form-data">
                                 <div class="row">
                                     <div class="col-md-2 col-sm-3 col-xs-3">
                                         <div class="user-profile">
                                             <div class="user-pro-body">
                                                 <div>
-                                                    <img src="plugins/images/users/horpey.jpg" alt="user-img" class="img-circle">
+                                                    <img id = "pic" src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" class="img-circle">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <input accept=".jpg, .jpeg, .png" type="file" name="picture" id="picture" style="display: none;">
                                     <div class="col-md-5 col-sm-5 col-xs-4">
                                         <div class="profile-action">
-                                            <a href="profile.html" class="btn btn-white btn-exchange">
+                                            <a id = "eee" href="profile.php" class="btn btn-white btn-exchange">
                                                 <span class="fa fa-eye"></span>
                                             </a>
                                             <a href="#" class="btn btn-white btn-exchange">
@@ -259,50 +325,54 @@
                                         </div>
                                     </div>
                                 </div>
-                                <form class="form-horizontal form-material">
+
                                 <div class="row">
-                                    <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>Full Name</strong>
+                                    <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>First Name</strong>
                                         <br>
-                                       <input type="text" placeholder="Full Name" value="Adeniran Opeyemi" class="form-control form-control-line">
+                                       <input name="first_name" type="text" placeholder="First Name" value="<?=$_SESSION['first_name']?>" class="form-control form-control-line">
+                                    </div>
+                                    <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>Last Name</strong>
+                                        <br>
+                                       <input name="last_name" type="text" placeholder="Last Name" value="<?=$_SESSION['last_name']?>" class="form-control form-control-line">
                                     </div>
                                     <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>Username</strong>
                                         <br>
-                                        <input type="text" placeholder="User Name" value="tha_ui_guy" class="form-control form-control-line">
+                                        <input name="username" type="text" placeholder="User Name" value="<?=$_SESSION['username']?>" class="form-control form-control-line">
                                     </div>
                                     <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>Email ID</strong>
                                         <br>
-                                        <input type="email" placeholder="Email ID" value="adeniran.opeyemi.ao@gmail.com" class="form-control form-control-line">
+                                        <input name="email" type="email" placeholder="Email ID" value="<?=$_SESSION['email']?>" class="form-control form-control-line">
                                     </div>
                                     <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>Location</strong>
-                                        <br>
-                                        <select class="form-control form-control-line profile-sel">
-                                            <option selected="selected">Nigeria</option>
-                                            <option>India</option>
-                                            <option>Usa</option>
-                                            <option>Canada</option>
-                                            <option>Thailand</option>
+                                        <select name="location" class="form-control form-control-line profile-sel">
+                                            <option <?=$_SESSION['location'] == 'Nigeria' ? 'selected' : ''?>>Nigeria</option>
+                                            <option <?=$_SESSION['location'] == 'India' ? 'selected' : ''?>>India</option>
+                                            <option <?=$_SESSION['location'] == 'Usa' ? 'selected' : ''?>>Usa</option>
+                                            <option <?=$_SESSION['location'] == 'Canada' ? 'selected' : ''?>>Canada</option>
+                                            <option <?=$_SESSION['location'] == 'Thailand' ? 'selected' : ''?>>Thailand</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>State</strong>
                                         <br>
-                                        <select class="form-control form-control-line profile-sel">
-                                            <option selected="selected">Lagos</option>
-                                            <option>Abuja</option>
-                                            <option>Oyo</option>
-                                            <option>Kaduna</option>
-                                            <option>Ekiti</option>
+                                        <select name="state" class="form-control form-control-line profile-sel">
+                                            <option <?=$_SESSION['state'] == 'Lagos' ? 'selected' : ''?>>Lagos</option>
+                                            <option <?=$_SESSION['state'] == 'Abuja' ? 'selected' : ''?>>Abuja</option>
+                                            <option <?=$_SESSION['state'] == 'Oyo' ? 'selected' : ''?>>Oyo</option>
+                                            <option <?=$_SESSION['state'] == 'Kaduna' ? 'selected' : ''?>>Kaduna</option>
+                                            <option <?=$_SESSION['state'] == 'Ekiti' ? 'selected' : ''?>>Ekiti</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6 col-xs-6 m-b-20 b-r"> <strong>Notification</strong>
                                         <br>
                                         <p class="text-muted d-inline">Send Notification</p>
                                         <div class="m-b-30 m-l-30 d-inline">
-                                            <input type="checkbox" checked class="js-switch" data-color="#ff6b00" data-size="small" />
+                                            <input id="notif" name="notifications" value="<?=$_SESSION['notifications']?>" type="checkbox" <?=$_SESSION['notifications'] == 'on' ? 'checked' : ''?> class="js-switch" data-color="#ff6b00" data-size="small" />
                                         </div>
                                     </div>
                                 </div>
+                                <input name="submit" type="submit" class="btn btn-orange btn-exchange" value="Update Account Settings"/>
                                 </form>
-                                <a href="updateProfile.html" class="btn btn-orange btn-exchange">Update Account Settings</a>
+
                             </div>
                         </div>
                     </div>
@@ -353,8 +423,35 @@
     <!-- end - This is for export functionality only -->
     <script>
         $(document).ready(function () {
+
+
+
+
+          document.getElementById('pic').onclick = function(){
+            document.getElementById('picture').click();
+          }
+
+          document.getElementById('picture').onchange = function(){
+            var file    = document.getElementById('picture').files[0];
+            var reader  = new FileReader();
+            reader.onloadend = function () {
+              document.getElementById('pic').src = reader.result;
+            }
+            if (file) {
+              reader.readAsDataURL(file);
+            }
+          }
+
+
             // Switchery
             var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+            elems[0].onchange = function(){
+              if(this.value === "on"){
+                this.value = "off";
+              }else{
+                this.value ="on";
+              }
+            }
             $('.js-switch').each(function() {
                 new Switchery($(this)[0], $(this).data());
             });

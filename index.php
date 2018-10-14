@@ -84,16 +84,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                            FAQ
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php" style="font-size: 14px;">
-                            Log In
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-white" href="signup.php">
-                            <p>Sign Up</p>
-                        </a>
-                    </li>
+                    <?php
+                    if(isset($_SESSION['user_id'])){
+                      ?>
+                      <li class="nav-item">
+                          <a class="nav-link" href="dashboard/index.php" style="font-size: 14px;">
+                              Dashboard
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link btn btn-white" href="<?=$app_root?>logout.php">
+                              <p>Logout</p>
+                          </a>
+                      </li>
+                        <?php
+                    }else{
+                      ?>
+                      <li class="nav-item">
+                          <a class="nav-link" href="login.php" style="font-size: 14px;">
+                              Log In
+                          </a>
+                      </li>
+                      <li class="nav-item">
+                          <a class="nav-link btn btn-white" href="signup.php">
+                              <p>Sign Up</p>
+                          </a>
+                      </li>
+                      <?php
+                    }
+                    ?>
+
                 </ul>
             </div>
         </div>
@@ -136,7 +156,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <input type="number" class= " quantity form-control patri-select text-color partss partss-l" placeholder="Converted Value" v-model="to_amount.toFixed(2)" disabled>
                             </div>
                             <p>Exchange rate - 1{{from_currency}} /{{rate.toFixed(2)}}{{to_currency}}</p>
-                            <a class="nav-link btn btn-lg btn-orange text-left" href="#">Get Started
+                            <a class="nav-link btn btn-lg btn-orange text-left" href="login.php">Get Started
                                 <span class="pull-right fa fa-chevron-right"></span>
                             </a>
                         </div>

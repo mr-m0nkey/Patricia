@@ -28,6 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               $_SESSION['last_name'] = $get->last_name;
               $_SESSION['location'] = $get->location;
               $_SESSION['state'] = $get->state;
+              $_SESSION['notifications'] = $get->notifications;
+              $_SESSION['avatar'] = $get->avatar;
               header('location: dashboard/index.php');
           }else{
                   //incorrect username and password combination

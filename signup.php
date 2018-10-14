@@ -27,11 +27,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(!$stmt->rowCount()){
           $stmt = $db->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
           $stmt->execute([$username, sha1($passy), $email]);
-          $stmt = $db->prepare("SELECT id FROM users WHERE username = ?");
+          $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
           $stmt->execute([$username]);
           $get = $stmt->fetch(PDO::FETCH_OBJ);
           // TODO: use reference instead of id
           $_SESSION['user_id'] = $get->id;
+          $_SESSION['username'] = $get->username;
+          $_SESSION['email'] = $get->email;
+          $_SESSION['first_name'] = $get->first_name;
+          $_SESSION['last_name'] = $get->last_name;
+          $_SESSION['location'] = $get->location;
+          $_SESSION['state'] = $get->state;
+          $_SESSION['notifications'] = $get->notifications;
+          $_SESSION['avatar'] = $get->avatar;
             header('location: dashboard/index.php');
         }else{
           $_SESSION['email_err'] = "Email exists";

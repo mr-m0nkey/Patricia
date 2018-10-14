@@ -109,7 +109,7 @@ if(!isset($_SESSION['user_id'])){
                                 <div class="message-center">
                                     <a href="#">
                                         <div class="user-img">
-                                            <img src="plugins/images/users/horpey.jpg" alt="user" class="img-circle">
+                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
                                             <span class="profile-status online pull-right"></span>
                                         </div>
                                         <div class="mail-contnet">
@@ -131,7 +131,7 @@ if(!isset($_SESSION['user_id'])){
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
-                            <img src="plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
+                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
                             <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
@@ -139,7 +139,7 @@ if(!isset($_SESSION['user_id'])){
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="plugins/images/users/horpey.jpg" alt="user" />
+                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
                                         <h4><?=$_SESSION['first_name']?>  <?=$_SESSION['last_name']?></h4>
@@ -164,7 +164,7 @@ if(!isset($_SESSION['user_id'])){
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="#">
+                                <a href="<?=$app_root?>logout.php">
                                     <i class="fa fa-power-off"></i> Logout</a>
                             </li>
                         </ul>
@@ -252,7 +252,7 @@ if(!isset($_SESSION['user_id'])){
                                         <div class="user-profile">
                                             <div class="user-pro-body">
                                                 <div>
-                                                    <img src="plugins/images/users/horpey.jpg" alt="user-img" class="img-circle">
+                                                    <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" class="img-circle">
                                                 </div>
                                             </div>
                                         </div>
