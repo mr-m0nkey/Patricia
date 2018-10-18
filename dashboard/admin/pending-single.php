@@ -1,3 +1,34 @@
+<?php
+session_start();
+include_once('../../assets/include/config.php');
+include_once('../../assets/include/validation.php');
+$load = true;
+if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
+  header("location: $app_root");
+}
+if(isset($_GET['id'])){
+  $stmt = $db->prepare("SELECT users.first_name, users.last_name, history.id, users.username, users.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time, history.user_id FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.id = ?");
+  $stmt->execute([$_GET['id']]);
+  if($stmt->rowCount()){
+      $history = $stmt->fetchAll(PDO::FETCH_OBJ);
+  }else{
+    $history = [];
+    $load = false;
+  }
+
+}
+
+if(isset($_POST['decline'])){
+  $user_id = test_input(filter_input(INPUT_POST, 'decline_user_id'));
+  $history_id = test_input(filter_input(INPUT_POST, 'decline_id'));
+  $reason = test_input(filter_input(INPUT_POST, 'reason'));
+}
+
+if($load === true){
+
+
+?>
+
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -38,12 +69,13 @@
       <![endif]-->
 
     <!-- Related File -->
+    <link href="../plugins/bower_components/switchery/dist/switchery.min.css" rel="stylesheet" />
+
     <link href="../plugins/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="fix-sidebar">
-    <div id="app">
     <!-- Preloader -->
     <!-- <div class="preloader">
         <svg class="circular" viewBox="25 25 50 50">
@@ -57,13 +89,13 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
                 <ul class="nav navbar-top-links navbar-left">
                     <li>
-                        <a href="javascript:void(0)" class="open-close waves-effect waves-light visible-xs">
+                        <a href="..vascript:void(0)" class="open-close waves-effect waves-light visible-xs">
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
@@ -184,7 +216,7 @@
                     </h3>
                 </div>
                 <ul class="nav" id="side-menu">
-                    <li>
+                     <li>
                         <a href="index.html" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Dashboard </span>
@@ -214,7 +246,7 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Transactions</h4>
+                        <h4 class="page-title">Ssojirin@gmail.com</h4>
                     </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                         <!-- <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20">
@@ -224,7 +256,7 @@
                             <li class="">
                                 <a href="index.html">Dashboard</a>
                             </li>
-                            <li class="active">Pending</li>
+                            <li class="active">Profile</li>
                         </ol>
                     </div>
                     <!-- /.col-lg-12 -->
@@ -233,98 +265,104 @@
 
                 <!-- Add Main Content -->
                 <!-- /row -->
-
                 <div class="row">
-                    <div class="col-sm-12">
-                        <div class="white-box">
-                            <h3 class="box-title m-b-0">Pending Transactions</h3>
-                            <!-- <p class="text-muted m-b-30">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p> -->
-                            <div class="table-responsive">
-                                <table id="myTable" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Username</th>
-                                            <th>Email Address</th>
-                                            <th>Conversion</th>
-                                            <th>Amount</th>
-                                            <th>Equivalence</th>
-                                            <th>Amount Details</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="pending">Pending</td>
-                                        </tr>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="pending">Pending</td>
-                                        </tr>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="pending-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="pending">Pending</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="col-sm-8">
+                        <div class="panel wallet-widgets p-0">
+                            <div class="panel-body" style="min-height: 120px;">
+                                <h4 class="text-right text-color">Pending</h4>
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-3 col-xs-3">
+                                        <div class="user-profile">
+                                            <div class="user-pro-body">
+                                                <div>
+                                                    <img src="../plugins/images/users/horpey.jpg" alt="user-img" class="img-circle">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-4 b-r">
+                                        <div class="profile-action">
+                                           <strong>Full Name</strong>
+                                            <br>
+                                            <p class="text-muted"><?=$history[0]->first_name?> <?=$history[0]->last_name?></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-xs-6 profile-action"><strong>Date</strong>
+                                        <br>
+                                        <p class="text-muted">08-12-18</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Email ID</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->email?></p>
+                                    </div>
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Conversion</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->transfer_from?>-<?=$history[0]->transfer_to?></p>
+                                    </div>
+                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Equivalence</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->equivalence?><?=$history[0]->transfer_to?></p>
+                                    </div>
+                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Fee</strong>
+                                        <br>
+
+                                        <p class="text-muted"><?=$history[0]->equivalence * (2/100)?></p>
+                                    </div>
+                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Payable</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->equivalence - ($history[0]->equivalence * (2/100))?><?=$history[0]->transfer_to?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Account Details</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->usd_account_number?></p>
+                                    </div>
+                                </div>
+
+                                <div class="prof-act">
+                                    <button class="btn btn-danger btn-exchange" type="button" data-toggle="modal" data-target="#decline">Decline</button>
+                                    <button class="btn btn-success btn-exchange">Transfer Successful</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.row -->
                 <!-- ============================================================== -->
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="decline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel1">Decline Transaction</h4> </div>
+                            <div class="modal-body">
+                                <form method = "post" action = "">
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="control-label">Email ID:</label>
+                                        <input type="text" class="form-control" id="recipient-name1" disabled="" value="<?=$history[0]->email?>"> </div>
+                                    <div class="form-group">
+                                        <label for="message-text" class="control-label">Reason:</label>
+                                        <textarea name="reason" rows="5" class="form-control" id="message-text1" placeholder="Please state a reason for declining this Transaction"></textarea>
+                                    </div>
+                                    <div class="modal-footer modal-center">
+                                        <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+                                        <!--<button type="button" class="btn btn-success btn-lg">Submit</button>-->
+                                        <input type="hidden" name = "decline_id" value="<?=$history[0]->id?>">
+                                        <input type="hidden" name = "decline_user_id" value="<?=$history[0]->user_id?>">
+                                        <input type="submit" class="btn btn-success btn-lg" name="decline" value="Submit">
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
 
 
 
@@ -340,9 +378,6 @@
 
     </div>
     <!-- /#wrapper -->
-</div>
-
-    </body>
     <!-- jQuery -->
     <script src="../plugins/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
@@ -354,14 +389,13 @@
     <!--Wave Effects -->
     <script src="../js/waves.js"></script>
 
-    <script src="../js/vue.min.js"></script>
-
-
 
 
     <!-- Custom Theme JavaScript -->
     <script src="../js/custom.min.js"></script>
     <script src="../plugins/bower_components/datatables/jquery.dataTables.min.js"></script>
+    <script src="../plugins/bower_components/switchery/dist/switchery.min.js"></script>
+
     <!-- start - This is for export functionality only -->
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
@@ -373,15 +407,11 @@
     <!-- end - This is for export functionality only -->
     <script>
         $(document).ready(function () {
-
-            $( ".btn-exchange" ).click(function( event ) {
-                event.preventDefault();
-                $('.form-x').slideUp();
-                $('.scan-code').slideDown();
-
-
+            // Switchery
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+            $('.js-switch').each(function() {
+                new Switchery($(this)[0], $(this).data());
             });
-            
 
             $('#myTable').DataTable();
             $(document).ready(function () {
@@ -431,29 +461,11 @@
         });
     </script>
 
-    <script type="text/javascript">
-
-    var data = {
-        test: "Hello World",
-        convertFrom: null,
-        convertTo: null,
-        showMobileMenu: true
-
-    }
-    new Vue({
-        el: '#app',
-        data: data,
-        methods: {
-            toggleD: function(){
-                this.isActive = !this.isActive;
-              // some code to filter users
-            }
-        },
-        mounted() {
-        },
-    })
-</script>
-
-
+</body>
 
 </html>
+<?php
+}else{
+
+}
+ ?>

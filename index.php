@@ -1,4 +1,5 @@
 <?php
+session_start();
 include_once('assets/include/config.php');
 include_once('assets/include/validation.php');
 

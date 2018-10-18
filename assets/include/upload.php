@@ -38,13 +38,13 @@ function uploadImage($file, $former){
     $target_file = $target_dir . $_SESSION['user_id'].'.'.$imageFileType;
 
       if (move_uploaded_file($file["tmp_name"], $target_file)) {
-        return false;
+          return $_SESSION['user_id'].'.'.$imageFileType;
       } else {
         addToSession('update_error', 'Sorry, there was an error uploading your file');
       }
   }
 
-  return $_SESSION['user_id'].'.'.$imageFileType;
+
 
 }
 

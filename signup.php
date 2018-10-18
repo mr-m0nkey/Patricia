@@ -16,6 +16,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = test_input(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
     $passy = test_input(filter_input(INPUT_POST, 'passy'));
     $confirm_passy = test_input(filter_input(INPUT_POST, 'confirm-passy'));
+    $first_name = test_input(filter_input(INPUT_POST, 'first_name'));
+    $last_name = test_input(filter_input(INPUT_POST, 'last_name'));
+
 
     // TODO: create functions to check if the username and email already exist in the database(to improve readability)
     try{
@@ -25,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $db->prepare("SELECT email FROM users where email = ?");
         $stmt->execute([$email]);
         if(!$stmt->rowCount()){
-          $stmt = $db->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
-          $stmt->execute([$username, sha1($passy), $email]);
+          $stmt = $db->prepare("INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)");
+          $stmt->execute([$username, sha1($passy), $email, $first_name, $last_name]);
           $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
           $stmt->execute([$username]);
           $get = $stmt->fetch(PDO::FETCH_OBJ);
@@ -149,6 +152,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                 <div class="form-group label-floating">
                                     <label class="control-label text-bold">Username</label>
                                     <input type="text" class="form-control sign-input" name="username" id="username">
+                                </div>
+                                <div class="form-group label-floating">
+                                    <label class="control-label text-bold">First Name</label>
+                                    <input type="text" class="form-control sign-input" name="first_name" id="first-name">
+                                </div>
+                                <div class="form-group label-floating">
+                                    <label class="control-label text-bold">Last Name</label>
+                                    <input type="text" class="form-control sign-input" name="last_name" id="last-name">
                                 </div>
                                 <div class="form-group label-floating">
                                     <label class="control-label text-bold">Email Address</label>

@@ -1,9 +1,11 @@
 <?php
 session_start();
 include_once('../../assets/include/config.php');
-//if(!isset($_SESSION['user_id'])){
-  //  header('location: ../index.php');
-//}
+
+if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
+  header("location: $app_root");
+}
+
 $stmt = $db->prepare("SELECT COUNT(*) FROM users ;");
 $stmt->execute();
 $user_count = $stmt->fetchAll()[0][0];
@@ -86,7 +88,7 @@ $declined_count = $stmt->fetchAll()[0][0];
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="../index.html">
+                    <li><a class="logo" href="../index.php">
                         <img class="dash-logo-view" src="../plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -140,40 +142,40 @@ $declined_count = $stmt->fetchAll()[0][0];
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="../#">
-                            <img src="../plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <img src="../plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="../plugins/images/users/horpey.jpg" alt="user" />
+                                        <img src="../plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="../profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <h4><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
+                                        <a href="../profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../profile.html">
+                                <a href="../profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="../history.html">
+                                <a href="../history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../settings.html">
+                                <a href="../settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../#">
+                                <a href="<?=$app_root?>logout.php">
                                     <i class="fa fa-power-off"></i> Logout</a>
                             </li>
                         </ul>
@@ -208,15 +210,15 @@ $declined_count = $stmt->fetchAll()[0][0];
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Dashboard </span>
                         </a>
-                        <a href="pending.html" class="waves-effect">
+                        <a href="pending.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-lan-pending fa-fw"></i>
                             <span class="hide-menu">Pending </span>
                         </a>
-                        <a href="completed.html" class="waves-effect">
+                        <a href="completed.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account-check fa-fw"></i>
                             <span class="hide-menu">Completed </span>
                         </a>
-                        <a href="cancel.html" class="waves-effect">
+                        <a href="cancel.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account-off fa-fw"></i>
                             <span class="hide-menu">Cancelled </span>
                         </a>
@@ -242,7 +244,7 @@ $declined_count = $stmt->fetchAll()[0][0];
                         </button> -->
                         <ol class="breadcrumb">
                             <!-- <li class="">
-                                <a href="../index.html">Dashboard</a>
+                                <a href="../index.php">Dashboard</a>
                             </li> -->
                             <li class="active">Dashboard</li>
                         </ol>

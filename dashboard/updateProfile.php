@@ -18,11 +18,16 @@ if(isset($_POST['submit'])){
   $state = test_input(filter_input(INPUT_POST, 'state'));
   $notifications = test_input(filter_input(INPUT_POST, 'notifications'));
   $avatar = $_SESSION['avatar'];
-  if(!empty($_FILES['picture'])){
+  if(!$notifications){
+    $notifications = "off";
+  }
+
+  if($_FILES['picture']['name']){
     $upload = uploadImage($_FILES['picture'], $_SESSION['avatar']);
-    if($upload !== false){
+    if($upload){
       $avatar = $upload;
     }
+    
   }
   try{
     $stmt = $db->prepare("SELECT username FROM users where username = ?");
@@ -446,10 +451,11 @@ if(isset($_POST['submit'])){
             // Switchery
             var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
             elems[0].onchange = function(){
-              if(this.value === "on"){
-                this.value = "off";
+
+              if(document.getElementById('notif').value === "on"){
+                document.getElementById('notif').value = "off";
               }else{
-                this.value ="on";
+                document.getElementById('notif').value = "on";
               }
             }
             $('.js-switch').each(function() {

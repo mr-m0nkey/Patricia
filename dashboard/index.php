@@ -556,9 +556,9 @@ if(!isset($_SESSION['user_id'])){
           email: document.getElementById('email-address').value,
           amount: data.amount,
           equivalent: document.getElementById('equivalent').value,
-          reference: response.reference
+          reference: Date.now()
         }
-        $.post("<?=$app_root?>/assets/include/exchange.php",send,function(d, s, x){
+        $.post("<?=$app_root?>/assets/include/exchange.php", send, function(d, s, x){
 
         });
       }
