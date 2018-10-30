@@ -6,7 +6,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
   header("location: $app_root");
 }
 
-$stmt = $db->prepare("SELECT history.id, users.username, users.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.status = 'pending'");
+$stmt = $db->prepare("SELECT history.id, users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.status = 'pending'");
 $stmt->execute();
 if($stmt->rowCount()){
     $history = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -116,7 +116,7 @@ if($stmt->rowCount()){
                                 <div class="message-center">
                                     <a href="../#">
                                         <div class="user-img">
-                                            <img src="../plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
+                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
                                             <span class="profile-status online pull-right"></span>
                                         </div>
                                         <div class="mail-contnet">
@@ -138,7 +138,7 @@ if($stmt->rowCount()){
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="../#">
-                            <img src="../plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
+                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
                             <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
@@ -146,7 +146,7 @@ if($stmt->rowCount()){
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="../plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
+                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
                                         <h4><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></h4>
@@ -273,7 +273,7 @@ if($stmt->rowCount()){
                                     <tbody>
                                       <?php foreach($history as $h){?>
                                         <tr>
-                                            <td>08-12-18</td>
+                                            <td><?=date_format(date_create($h->time),"d-m-y")?></td>
                                             <td>
                                                 <a class="text-white" href="pending-single.php?id=<?=$h->id?>">
                                                     <?=$h->username?>

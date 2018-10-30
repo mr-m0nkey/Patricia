@@ -21,13 +21,14 @@ if(isset($_POST['submit'])){
   if(!$notifications){
     $notifications = "off";
   }
-
-  if($_FILES['picture']['name']){
+  
+  if(isset($_FILES['picture']['name'])){
     $upload = uploadImage($_FILES['picture'], $_SESSION['avatar']);
     if($upload){
       $avatar = $upload;
+      $_SESSION['avatar'] = $avatar;
     }
-    
+
   }
   try{
     $stmt = $db->prepare("SELECT username FROM users where username = ?");

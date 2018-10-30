@@ -4,9 +4,9 @@ session_start();
 include_once('config.php');
 
 
-require('../../vendor/autoload.php');
-$dotenv = new Dotenv\Dotenv("../../");
-$dotenv->load();
+//require('../../vendor/autoload.php');
+//$dotenv = new Dotenv\Dotenv("../../");
+//$dotenv->load();
 
 //currencies
 $currency['perfect_money'] = "pm_USD";
@@ -52,7 +52,7 @@ function getRateCurrencyLayer($to){
   try{
     // set API Endpoint, access key, required parameters
     $endpoint = 'live';
-    $access_key = $_ENV['CURRENCY_LAYER_API_KEY'];
+    $access_key = "c0d77f34b6b4a76fb43ef3969303f857";
 
 
     $amount = 10;

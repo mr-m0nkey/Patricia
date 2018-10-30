@@ -1,3 +1,29 @@
+<?php
+session_start();
+include_once('../../assets/include/config.php');
+include_once('../../assets/include/validation.php');
+$load = true;
+if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
+  header("location: $app_root");
+}
+if(isset($_GET['id'])){
+  $stmt = $db->prepare("SELECT users.first_name, history.reference, users.avatar, users.last_name, history.id, users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time, history.user_id FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.id = ? AND status = 'completed'");
+  $stmt->execute([$_GET['id']]);
+  if($stmt->rowCount()){
+      $history = $stmt->fetchAll(PDO::FETCH_OBJ);
+  }else{
+    $history = [];
+    $load = false;
+  }
+
+}
+
+
+if($load === true){
+
+
+?>
+
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -38,12 +64,13 @@
       <![endif]-->
 
     <!-- Related File -->
+    <link href="../plugins/bower_components/switchery/dist/switchery.min.css" rel="stylesheet" />
+
     <link href="../plugins/bower_components/datatables/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
     <link href="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="fix-sidebar">
-    <div id="app">
     <!-- Preloader -->
     <!-- <div class="preloader">
         <svg class="circular" viewBox="25 25 50 50">
@@ -57,17 +84,17 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
                 <ul class="nav navbar-top-links navbar-left">
                     <li>
-                        <a href="javascript:void(0)" class="open-close waves-effect waves-light visible-xs">
+                        <a href="..vascript:void(0)" class="open-close waves-effect waves-light visible-xs">
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="index.html">
+                    <li><a class="logo" href="index.php">
                         <img class="dash-logo-view" src="../plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -99,7 +126,7 @@
                                 <div class="message-center">
                                     <a href="../#">
                                         <div class="user-img">
-                                            <img src="../plugins/images/users/horpey.jpg" alt="user" class="img-circle">
+                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
                                             <span class="profile-status online pull-right"></span>
                                         </div>
                                         <div class="mail-contnet">
@@ -121,35 +148,35 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="../#">
-                            <img src="../plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="../plugins/images/users/horpey.jpg" alt="user" />
+                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="../profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <h4><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
+                                        <a href="../profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../profile.html">
+                                <a href="../profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="../history.html">
+                                <a href="../history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../settings.html">
+                                <a href="../settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
@@ -184,20 +211,20 @@
                     </h3>
                 </div>
                 <ul class="nav" id="side-menu">
-                    <li>
-                        <a href="index.html" class="waves-effect">
+                     <li>
+                        <a href="index.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Dashboard </span>
                         </a>
-                        <a href="pending.html" class="waves-effect">
+                        <a href="pending.php" class="waves-effect ">
                             <i data-icon="v" class="mdi mdi-lan-pending fa-fw"></i>
                             <span class="hide-menu">Pending </span>
                         </a>
-                        <a href="completed.html" class="waves-effect">
+                        <a href="completed.php" class="waves-effect active">
                             <i data-icon="v" class="mdi mdi-account-check fa-fw"></i>
                             <span class="hide-menu">Completed </span>
                         </a>
-                        <a href="javascript:void(0)" class="waves-effect active">
+                        <a href="cancel.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account-off fa-fw"></i>
                             <span class="hide-menu">Cancelled </span>
                         </a>
@@ -214,7 +241,7 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Transactions</h4>
+                        <h4 class="page-title text-lowercase"><?=$history[0]->email?></h4>
                     </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                         <!-- <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20">
@@ -222,9 +249,9 @@
                         </button> -->
                         <ol class="breadcrumb">
                             <li class="">
-                                <a href="index.html">Dashboard</a>
+                                <a href="index.php">Dashboard</a>
                             </li>
-                            <li class="active">Declined</li>
+                            <li class="active">Profile</li>
                         </ol>
                     </div>
                     <!-- /.col-lg-12 -->
@@ -233,98 +260,104 @@
 
                 <!-- Add Main Content -->
                 <!-- /row -->
-
                 <div class="row">
-                    <div class="col-sm-12">
-                        <div class="white-box">
-                            <h3 class="box-title m-b-0">Declined Transactions</h3>
-                            <!-- <p class="text-muted m-b-30">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p> -->
-                            <div class="table-responsive">
-                                <table id="myTable" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Username</th>
-                                            <th>Email Address</th>
-                                            <th>Conversion</th>
-                                            <th>Amount</th>
-                                            <th>Equivalence</th>
-                                            <th>Amount Details</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="failed">Declined</td>
-                                        </tr>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="failed">Declined</td>
-                                        </tr>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="cancel-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="failed">Declined</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                    <div class="col-sm-8">
+                        <div class="panel wallet-widgets p-0">
+                            <div class="panel-body" style="min-height: 120px;">
+                                <h4 class="text-right completed">Completed</h4>
+                                <div class="row">
+                                    <div class="col-md-2 col-sm-3 col-xs-3">
+                                        <div class="user-profile">
+                                            <div class="user-pro-body">
+                                                <div>
+                                                    <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$history[0]->avatar?>" alt="user-img" class="img-circle">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4 col-xs-4 b-r">
+                                        <div class="profile-action">
+                                           <strong>Full Name</strong>
+                                            <br>
+                                            <p class="text-muted"><?=$history[0]->first_name?> <?=$history[0]->last_name?></p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-xs-6 profile-action"><strong>Date</strong>
+                                        <br>
+                                        <p class="text-muted"><?=date_format(date_create($history[0]->time),"d-m-Y")?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Conversion</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->transfer_from?>-<?=$history[0]->transfer_to?></p>
+                                    </div>
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Email ID</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->email?></p>
+                                    </div>
+                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Equivalence</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->equivalence?><?=$history[0]->transfer_to?></p>
+                                    </div>
+                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Fee</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->equivalence * (2/100)?></p>
+                                    </div>
+                                    <div class="col-md-2 col-xs-6 b-r"> <strong>Payable</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->equivalence - ($history[0]->equivalence * (2/100))?><?=$history[0]->transfer_to?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Account Details</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->usd_account_number?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Transaction Reference</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->reference?></p>
+                                    </div>
+                                </div>
+
+                                <div class="prof-act">
+                                    <button class="btn btn-success btn-exchange" type="button" data-toggle="modal" data-target="#decline">Resend Email</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- /.row -->
                 <!-- ============================================================== -->
+
+
+                <!-- Modal -->
+                <div class="modal fade" id="decline" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="exampleModalLabel1">Completed Transaction</h4> </div>
+                            <div class="modal-body">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="recipient-name" class="control-label">Email ID:</label>
+                                        <input type="text" class="form-control" id="recipient-name1" disabled="" value="ssojirin@gmail.com"> </div>
+                                    <div class="form-group">
+                                        <label for="message-text" class="control-label">Message:</label>
+                                        <textarea rows="5" class="form-control" id="message-text1" placeholder="Write your Message here..."></textarea>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer modal-center">
+                                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+                                <button type="button" class="btn btn-success btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
 
@@ -340,9 +373,6 @@
 
     </div>
     <!-- /#wrapper -->
-</div>
-
-    </body>
     <!-- jQuery -->
     <script src="../plugins/bower_components/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap Core JavaScript -->
@@ -354,14 +384,13 @@
     <!--Wave Effects -->
     <script src="../js/waves.js"></script>
 
-    <script src="../js/vue.min.js"></script>
-
-
 
 
     <!-- Custom Theme JavaScript -->
     <script src="../js/custom.min.js"></script>
     <script src="../plugins/bower_components/datatables/jquery.dataTables.min.js"></script>
+    <script src="../plugins/bower_components/switchery/dist/switchery.min.js"></script>
+
     <!-- start - This is for export functionality only -->
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
@@ -373,15 +402,11 @@
     <!-- end - This is for export functionality only -->
     <script>
         $(document).ready(function () {
-
-            $( ".btn-exchange" ).click(function( event ) {
-                event.preventDefault();
-                $('.form-x').slideUp();
-                $('.scan-code').slideDown();
-
-
+            // Switchery
+            var elems = Array.prototype.slice.call(document.querySelectorAll('.js-switch'));
+            $('.js-switch').each(function() {
+                new Switchery($(this)[0], $(this).data());
             });
-            
 
             $('#myTable').DataTable();
             $(document).ready(function () {
@@ -431,29 +456,12 @@
         });
     </script>
 
-    <script type="text/javascript">
-
-    var data = {
-        test: "Hello World",
-        convertFrom: null,
-        convertTo: null,
-        showMobileMenu: true
-
-    }
-    new Vue({
-        el: '#app',
-        data: data,
-        methods: {
-            toggleD: function(){
-                this.isActive = !this.isActive;
-              // some code to filter users
-            }
-        },
-        mounted() {
-        },
-    })
-</script>
-
-
+</body>
 
 </html>
+
+<?php
+}else{
+
+}
+ ?>

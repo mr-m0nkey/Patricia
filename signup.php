@@ -11,49 +11,54 @@ if(isset($_SESSION['user_id'])){
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if(isset($_POST['submit'])) {
-
+    $check = true;
     $username = test_input(filter_input(INPUT_POST, 'username'));
     $email = test_input(filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL));
     $passy = test_input(filter_input(INPUT_POST, 'passy'));
     $confirm_passy = test_input(filter_input(INPUT_POST, 'confirm-passy'));
     $first_name = test_input(filter_input(INPUT_POST, 'first_name'));
     $last_name = test_input(filter_input(INPUT_POST, 'last_name'));
-
-
-    // TODO: create functions to check if the username and email already exist in the database(to improve readability)
-    try{
-      $stmt = $db->prepare("SELECT username FROM users where username = ?");
-      $stmt->execute([$username]);
-      if(!$stmt->rowCount()){
-        $stmt = $db->prepare("SELECT email FROM users where email = ?");
-        $stmt->execute([$email]);
-        if(!$stmt->rowCount()){
-          $stmt = $db->prepare("INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)");
-          $stmt->execute([$username, sha1($passy), $email, $first_name, $last_name]);
-          $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
-          $stmt->execute([$username]);
-          $get = $stmt->fetch(PDO::FETCH_OBJ);
-          // TODO: use reference instead of id
-          $_SESSION['user_id'] = $get->id;
-          $_SESSION['username'] = $get->username;
-          $_SESSION['email'] = $get->email;
-          $_SESSION['first_name'] = $get->first_name;
-          $_SESSION['last_name'] = $get->last_name;
-          $_SESSION['location'] = $get->location;
-          $_SESSION['state'] = $get->state;
-          $_SESSION['notifications'] = $get->notifications;
-          $_SESSION['avatar'] = $get->avatar;
-            header('location: dashboard/index.php');
-        }else{
-          $_SESSION['email_err'] = "Email exists";
-        }
-      }else{
-          $_SESSION['username_err'] = "Username exists";
-      }
-    }catch(Exception $ex){
-      $_SESSION['login_err'] = "An error occured";
-      die($ex->getMessage());
+    if($passy !== $confirm_passy){
+      $check == false;
     }
+
+    if($check){
+      try{
+        $stmt = $db->prepare("SELECT username FROM users where username = ?");
+        $stmt->execute([$username]);
+        if(!$stmt->rowCount()){
+          $stmt = $db->prepare("SELECT email FROM users where email = ?");
+          $stmt->execute([$email]);
+          if(!$stmt->rowCount()){
+            $stmt = $db->prepare("INSERT INTO users (username, password, email, first_name, last_name) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$username, sha1($passy), $email, $first_name, $last_name]);
+            $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt->execute([$username]);
+            $get = $stmt->fetch(PDO::FETCH_OBJ);
+            // TODO: use reference instead of id
+            $_SESSION['user_id'] = $get->id;
+            $_SESSION['username'] = $get->username;
+            $_SESSION['email'] = $get->email;
+            $_SESSION['first_name'] = $get->first_name;
+            $_SESSION['last_name'] = $get->last_name;
+            $_SESSION['location'] = $get->location;
+            $_SESSION['state'] = $get->state;
+            $_SESSION['notifications'] = $get->notifications;
+            $_SESSION['avatar'] = $get->avatar;
+              header('location: dashboard/index.php');
+          }else{
+            $_SESSION['email_err'] = "Email exists";
+          }
+        }else{
+            $_SESSION['username_err'] = "Username exists";
+        }
+      }catch(Exception $ex){
+        $_SESSION['login_err'] = "An error occured";
+        die($ex->getMessage());
+      }
+    }
+    // TODO: create functions to check if the username and email already exist in the database(to improve readability)
+
   }
 }
 

@@ -7,7 +7,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
   header("location: $app_root");
 }
 if(isset($_GET['id'])){
-  $stmt = $db->prepare("SELECT users.first_name, users.last_name, history.id, users.username, users.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time, history.user_id FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.id = ?");
+  $stmt = $db->prepare("SELECT users.first_name, history.reference, users.avatar, users.last_name, history.id, users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time, history.user_id FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.id = ? AND status = 'pending'");
   $stmt->execute([$_GET['id']]);
   if($stmt->rowCount()){
       $history = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -19,9 +19,28 @@ if(isset($_GET['id'])){
 }
 
 if(isset($_POST['decline'])){
+  // TODO: add try block
   $user_id = test_input(filter_input(INPUT_POST, 'decline_user_id'));
   $history_id = test_input(filter_input(INPUT_POST, 'decline_id'));
   $reason = test_input(filter_input(INPUT_POST, 'reason'));
+  $stmt = $db->prepare("INSERT INTO alerts (user_id, history_id, reason, action) VALUES (?, ?, ?, ?)");
+  $stmt->execute([$user_id, $history_id, $reason, 'declined']);
+  $stmt = $db->prepare("UPDATE history SET status = 'declined' WHERE id = ?");
+  $stmt->execute([$history_id]);
+  // TODO: send mail to user
+  header("location: $app_root"."dashboard/admin/pending.php");
+}
+
+if(isset($_POST['completed'])){
+  // TODO: add try block
+  $user_id = test_input(filter_input(INPUT_POST, 'completed_user_id'));
+  $history_id = test_input(filter_input(INPUT_POST, 'completed_id'));
+  $stmt = $db->prepare("INSERT INTO alerts (user_id, history_id, action) VALUES (?, ?, ?)");
+  $stmt->execute([$user_id, $history_id, 'completed']);
+  $stmt = $db->prepare("UPDATE history SET status = 'completed' WHERE id = ?");
+  $stmt->execute([$history_id]);
+  // TODO: Send mail to user
+  header("location: $app_root"."dashboard/admin/pending.php");
 }
 
 if($load === true){
@@ -99,7 +118,7 @@ if($load === true){
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="index.html">
+                    <li><a class="logo" href="index.php">
                         <img class="dash-logo-view" src="../plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -131,7 +150,7 @@ if($load === true){
                                 <div class="message-center">
                                     <a href="../#">
                                         <div class="user-img">
-                                            <img src="../plugins/images/users/horpey.jpg" alt="user" class="img-circle">
+                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
                                             <span class="profile-status online pull-right"></span>
                                         </div>
                                         <div class="mail-contnet">
@@ -153,35 +172,35 @@ if($load === true){
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="../#">
-                            <img src="../plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="../plugins/images/users/horpey.jpg" alt="user" />
+                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="../profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <h4><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
+                                        <a href="../profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../profile.html">
+                                <a href="../profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="../history.html">
+                                <a href="../history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../settings.html">
+                                <a href="../settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
@@ -217,7 +236,7 @@ if($load === true){
                 </div>
                 <ul class="nav" id="side-menu">
                      <li>
-                        <a href="index.html" class="waves-effect">
+                        <a href="index.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Dashboard </span>
                         </a>
@@ -225,11 +244,11 @@ if($load === true){
                             <i data-icon="v" class="mdi mdi-lan-pending fa-fw"></i>
                             <span class="hide-menu">Pending </span>
                         </a>
-                        <a href="completed.html" class="waves-effect">
+                        <a href="completed.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account-check fa-fw"></i>
                             <span class="hide-menu">Completed </span>
                         </a>
-                        <a href="cancel.html" class="waves-effect">
+                        <a href="cancel.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account-off fa-fw"></i>
                             <span class="hide-menu">Cancelled </span>
                         </a>
@@ -246,7 +265,7 @@ if($load === true){
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Ssojirin@gmail.com</h4>
+                        <h4 class="page-title"><?=$history[0]->email?></h4>
                     </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                         <!-- <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20">
@@ -254,7 +273,7 @@ if($load === true){
                         </button> -->
                         <ol class="breadcrumb">
                             <li class="">
-                                <a href="index.html">Dashboard</a>
+                                <a href="index.php">Dashboard</a>
                             </li>
                             <li class="active">Profile</li>
                         </ol>
@@ -275,7 +294,7 @@ if($load === true){
                                         <div class="user-profile">
                                             <div class="user-pro-body">
                                                 <div>
-                                                    <img src="../plugins/images/users/horpey.jpg" alt="user-img" class="img-circle">
+                                                    <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$history[0]->avatar?>" alt="user-img" class="img-circle">
                                                 </div>
                                             </div>
                                         </div>
@@ -289,7 +308,7 @@ if($load === true){
                                     </div>
                                     <div class="col-md-6 col-xs-6 profile-action"><strong>Date</strong>
                                         <br>
-                                        <p class="text-muted">08-12-18</p>
+                                        <p class="text-muted"><?=date_format(date_create($history[0]->time),"d-m-Y")?></p>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -321,10 +340,21 @@ if($load === true){
                                         <p class="text-muted"><?=$history[0]->usd_account_number?></p>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Transaction Reference</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->reference?></p>
+                                    </div>
+                                </div>
 
                                 <div class="prof-act">
                                     <button class="btn btn-danger btn-exchange" type="button" data-toggle="modal" data-target="#decline">Decline</button>
-                                    <button class="btn btn-success btn-exchange">Transfer Successful</button>
+                                    <form style="display: inline;" method="post" action="">
+                                      <input type="hidden" name="completed_user_id" value="<?=$history[0]->user_id?>">
+                                      <input type="hidden" name="completed_id" value="<?=$history[0]->id?>">
+                                      <input type="submit" name="completed" class="btn btn-success btn-exchange" value="Transfer Successful">
+                                    </form>
+
                                 </div>
                             </div>
                         </div>

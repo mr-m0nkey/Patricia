@@ -1,3 +1,30 @@
+<?php
+session_start();
+include_once('../../assets/include/config.php');
+include_once('../../assets/include/validation.php');
+$load = true;
+if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
+  header("location: $app_root");
+}
+if(isset($_GET['id'])){
+  $stmt = $db->prepare("SELECT users.first_name, history.reference, users.avatar, users.last_name, history.id, users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time, history.user_id FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.id = ? AND status = 'declined'");
+  $stmt->execute([$_GET['id']]);
+  if($stmt->rowCount()){
+      $history = $stmt->fetchAll(PDO::FETCH_OBJ);
+  }else{
+    $history = [];
+    $load = false;
+  }
+
+}
+
+
+if($load === true){
+
+
+?>
+
+
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -58,7 +85,7 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
@@ -68,7 +95,7 @@
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="index.html">
+                    <li><a class="logo" href="index.php">
                         <img class="dash-logo-view" src="../plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -100,7 +127,7 @@
                                 <div class="message-center">
                                     <a href="../#">
                                         <div class="user-img">
-                                            <img src="../plugins/images/users/horpey.jpg" alt="user" class="img-circle">
+                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
                                             <span class="profile-status online pull-right"></span>
                                         </div>
                                         <div class="mail-contnet">
@@ -122,35 +149,35 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="../#">
-                            <img src="../plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="../plugins/images/users/horpey.jpg" alt="user" />
+                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="../profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <h4><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
+                                        <a href="../profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../profile.html">
+                                <a href="../profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="../history.html">
+                                <a href="../history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../settings.html">
+                                <a href="../settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
@@ -186,15 +213,15 @@
                 </div>
                 <ul class="nav" id="side-menu">
                      <li>
-                        <a href="index.html" class="waves-effect">
+                        <a href="index.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Dashboard </span>
                         </a>
-                        <a href="pending.html" class="waves-effect ">
+                        <a href="pending.php" class="waves-effect ">
                             <i data-icon="v" class="mdi mdi-lan-pending fa-fw"></i>
                             <span class="hide-menu">Pending </span>
                         </a>
-                        <a href="cancel.html" class="waves-effect">
+                        <a href="cancel.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account-check fa-fw"></i>
                             <span class="hide-menu">Completed </span>
                         </a>
@@ -215,7 +242,7 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title text-lowercase">Ssojirin@gmail.com</h4>
+                        <h4 class="page-title text-lowercase"><?=$history[0]->email?></h4>
                     </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
                         <!-- <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20">
@@ -223,7 +250,7 @@
                         </button> -->
                         <ol class="breadcrumb">
                             <li class="">
-                                <a href="index.html">Dashboard</a>
+                                <a href="index.php">Dashboard</a>
                             </li>
                             <li class="active">Profile</li>
                         </ol>
@@ -244,7 +271,7 @@
                                         <div class="user-profile">
                                             <div class="user-pro-body">
                                                 <div>
-                                                    <img src="../plugins/images/users/horpey.jpg" alt="user-img" class="img-circle">
+                                                    <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$history[0]->avatar?>" alt="user-img" class="img-circle">
                                                 </div>
                                             </div>
                                         </div>
@@ -253,44 +280,46 @@
                                         <div class="profile-action">
                                            <strong>Full Name</strong>
                                             <br>
-                                            <p class="text-muted">Seyike Sojirin</p>
+                                            <p class="text-muted"><?=$history[0]->first_name?> <?=$history[0]->last_name?></p>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-xs-6 profile-action"><strong>Date</strong>
                                         <br>
-                                        <p class="text-muted">08-12-18</p>
+                                        <p class="text-muted"><?=date_format(date_create($history[0]->time),"d-m-Y")?></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Email ID</strong>
                                         <br>
-                                        <p class="text-muted">ssojirin@gmail.com</p>
+                                        <p class="text-muted"><?=$history[0]->email?></p>
                                     </div>
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Conversion</strong>
                                         <br>
-                                        <p class="text-muted">USD-BTC</p>
-                                    </div>
-                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Email ID</strong>
-                                        <br>
-                                        <p class="text-muted">adeniran.opeyemi.ao@gmail.com</p>
+                                        <p class="text-muted"><?=$history[0]->transfer_from?>-<?=$history[0]->transfer_to?></p>
                                     </div>
                                     <div class="col-md-2 col-xs-6 b-r"> <strong>Equivalence</strong>
                                         <br>
-                                        <p class="text-muted">0.21BTC</p>
+                                        <p class="text-muted"><?=$history[0]->equivalence?><?=$history[0]->transfer_to?></p>
                                     </div>
                                     <div class="col-md-2 col-xs-6 b-r"> <strong>Fee</strong>
                                         <br>
-                                        <p class="text-muted">0.01</p>
+                                        <p class="text-muted"><?=$history[0]->equivalence * (2/100)?></p>
                                     </div>
                                     <div class="col-md-2 col-xs-6 b-r"> <strong>Payable</strong>
                                         <br>
-                                        <p class="text-muted">0.20BTC</p>
+                                        <p class="text-muted"><?=$history[0]->equivalence - ($history[0]->equivalence * (2/100))?><?=$history[0]->transfer_to?></p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 col-xs-6 b-r"> <strong>Account Details</strong>
                                         <br>
-                                        <p class="text-muted">WRHFSFSFSIJDSIDIDA</p>
+                                        <p class="text-muted"><?=$history[0]->usd_account_number?></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-xs-6 b-r"> <strong>Transaction Reference</strong>
+                                        <br>
+                                        <p class="text-muted"><?=$history[0]->reference?></p>
                                     </div>
                                 </div>
 
@@ -431,3 +460,9 @@
 </body>
 
 </html>
+
+<?php
+}else{
+
+}
+ ?>

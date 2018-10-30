@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           }
 
           else{
-              //username does not exist. log in failed
+              //username does not exist. log in failed. Dislau errors
               $_SESSION['login_err'] = "Incorrect username and/or password";
           }
    }
@@ -152,6 +152,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                     <p class="mt-3">
                                         <a class="logii" href="forgot.php">Forgot Password? Click Here</a>
                                     </p>
+                                </div>
+                                <div class="form-group label-floating mt-2">
+                                    <label class="control-label text-bold"><?=$_SESSION['login_err']?></label>
                                 </div>
                                 <div class="form-group label-floating mt-2">
                                     <input type="submit" name="submit" class="btn btn-next btn-fill btp btn-wd btn-orange btn-block" value="Login">

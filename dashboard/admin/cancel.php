@@ -1,3 +1,22 @@
+<?php
+session_start();
+include_once('../../assets/include/config.php');
+
+if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
+  header("location: $app_root");
+}
+
+$stmt = $db->prepare("SELECT history.id, users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.status = 'declined'");
+$stmt->execute();
+if($stmt->rowCount()){
+    $history = $stmt->fetchAll(PDO::FETCH_OBJ);
+}else{
+  $history = [];
+}
+?>
+
+
+
 <!DOCTYPE html>
 <!--
    This is a starter template page. Use this page to start your new project from
@@ -57,7 +76,7 @@
                 <!-- Toggle icon for mobile view -->
                 <div class="top-left-part">
                     <!-- Logo -->
-                    
+
                 </div>
                 <!-- /Logo -->
                 <!-- Search input and Toggle icon -->
@@ -67,7 +86,7 @@
                             <i class="ti-close ti-menu"></i>
                         </a>
                     </li>
-                    <li><a class="logo" href="index.html">
+                    <li><a class="logo" href="index.php">
                         <img class="dash-logo-view" src="../plugins/images/patricia/patriciax-logo-white.png" alt="Home">
                     </a></li>
                 </ul>
@@ -121,35 +140,35 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="../#">
-                            <img src="../plugins/images/users/horpey.jpg" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs">Horpey</b>
+                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
+                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated slideInUp">
                             <li>
                                 <div class="dw-user-box">
                                     <div class="u-img">
-                                        <img src="../plugins/images/users/horpey.jpg" alt="user" />
+                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
                                     </div>
                                     <div class="u-text">
-                                        <h4>Horpey Jobs</h4>
-                                        <p class="text-muted">horpey@gmail.com</p>
-                                        <a href="../profile.html" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <h4><?=$_SESSION['first_name']?> <?=$_SESSION['last_name']?></h4>
+                                        <p class="text-muted"><?=$_SESSION['email']?></p>
+                                        <a href="../profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../profile.html">
+                                <a href="../profile.php">
                                     <i class="ti-user"></i> My Profile</a>
                             </li>
                             <li>
-                                <a href="../history.html">
+                                <a href="../history.php">
                                     <i class="ti-wallet"></i> History</a>
                             </li>
                             <li role="separator" class="divider"></li>
                             <li>
-                                <a href="../settings.html">
+                                <a href="../settings.php">
                                     <i class="ti-settings"></i> Account Setting</a>
                             </li>
                             <li role="separator" class="divider"></li>
@@ -185,19 +204,19 @@
                 </div>
                 <ul class="nav" id="side-menu">
                     <li>
-                        <a href="index.html" class="waves-effect">
+                        <a href="index.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
                             <span class="hide-menu">Dashboard </span>
                         </a>
-                        <a href="pending.html" class="waves-effect">
+                        <a href="pending.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-lan-pending fa-fw"></i>
                             <span class="hide-menu">Pending </span>
                         </a>
-                        <a href="javascript:void(0)" class="waves-effect active">
+                        <a href="completed.php" class="waves-effect">
                             <i data-icon="v" class="mdi mdi-account-check fa-fw"></i>
                             <span class="hide-menu">Completed </span>
                         </a>
-                        <a href="cancel.html" class="waves-effect">
+                        <a href="javascript:void(0)" class="waves-effect active">
                             <i data-icon="v" class="mdi mdi-account-off fa-fw"></i>
                             <span class="hide-menu">Cancelled </span>
                         </a>
@@ -222,9 +241,9 @@
                         </button> -->
                         <ol class="breadcrumb">
                             <li class="">
-                                <a href="index.html">Dashboard</a>
+                                <a href="index.php">Dashboard</a>
                             </li>
-                            <li class="active">Completed</li>
+                            <li class="active">Declined</li>
                         </ol>
                     </div>
                     <!-- /.col-lg-12 -->
@@ -237,7 +256,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="white-box">
-                            <h3 class="box-title m-b-0">Completed Transactions</h3>
+                            <h3 class="box-title m-b-0">Declined Transactions</h3>
                             <!-- <p class="text-muted m-b-30">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p> -->
                             <div class="table-responsive">
                                 <table id="myTable" class="table table-striped">
@@ -254,69 +273,29 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                      <?php foreach($history as $h){?>
                                         <tr>
-                                            <td>08-12-18</td>
+                                            <td><?=date_format(date_create($h->time),"d-m-y")?></td>
                                             <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    Seyike
+                                                <a class="text-white" href="cancel-single.php?id=<?=$h->id?>">
+                                                    <?=$h->username?>
                                                 </a>
                                             </td>
                                             <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    ssojirin@gmail.com
+                                                <a class="text-white" href="cancel-single.php?id=<?=$h->id?>">
+                                                    <?=$h->email?>
                                                 </a>
                                             </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
+                                            <td><?=$h->transfer_from?>-<?=$h->transfer_to?></td>
+                                            <td><?=$h->amount?><?=$h->transfer_from?></td>
+                                            <td><?=$h->equivalence?><?=$h->transfer_to?></td>
                                             <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    WRBDKD89DNSKDK
+                                                <a class="text-white" href="cancel-single.php?id=<?=$h->id?>">
+                                                    <?=$h->usd_account_number?>
                                                 </a></td>
-                                            <td class="completed">Completed</td>
+                                            <td class="<?=$h->status?>"><?=$h->status?></td>
                                         </tr>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="completed">Completed</td>
-                                        </tr>
-                                        <tr>
-                                            <td>08-12-18</td>
-                                            <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    Seyike
-                                                </a>
-                                            </td>
-                                            <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    ssojirin@gmail.com
-                                                </a>
-                                            </td>
-                                            <td>USD-BTC</td>
-                                            <td>$1200</td>
-                                            <td>0.21BTC</td>
-                                            <td>
-                                                <a class="text-white" href="completed-single.html">
-                                                    WRBDKD89DNSKDK
-                                                </a></td>
-                                            <td class="completed">Completed</td>
-                                        </tr>
+                                             <?php	}	?>
                                     </tbody>
                                 </table>
                             </div>
@@ -381,7 +360,7 @@
 
 
             });
-            
+
 
             $('#myTable').DataTable();
             $(document).ready(function () {

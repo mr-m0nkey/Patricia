@@ -15,12 +15,13 @@ function uploadImage($file, $former){
       addToSession('update_error', 'File is not an image');
       $uploadOk = 0;
   }
+  //die(print_r($file["size"]));
   // Check if file already exists
   if($former !== "default.jpg"){
     unlink($target_dir.$former);
   }
   // Check file size
-  if ($file["size"] > 500000) {
+  if ($file["size"] > 50000000) {
       addToSession('update_error', 'Sorry, your file is too large');
       $uploadOk = 0;
   }
@@ -30,6 +31,7 @@ function uploadImage($file, $former){
     addToSession('update_error', 'Sorry, only JPG, JPEG, PNG & GIF files are allowed');
       $uploadOk = 0;
   }
+
   // Check if $uploadOk is set to 0 by an error
   if ($uploadOk == 0) {
     return false;

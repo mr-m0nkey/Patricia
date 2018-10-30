@@ -333,7 +333,7 @@ $declined_count = $stmt->fetchAll()[0][0];
                                     </thead>
                                     <tbody>
                                       <?php
-                                      $stmt = $db->prepare("SELECT users.username, users.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time FROM history LEFT OUTER JOIN users ON history.user_id = users.id");
+                                      $stmt = $db->prepare("SELECT users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time FROM history LEFT OUTER JOIN users ON history.user_id = users.id");
                                       $stmt->execute();
                                       if($stmt->rowCount()){
                                           $history = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -344,7 +344,7 @@ $declined_count = $stmt->fetchAll()[0][0];
 
                                        <?php foreach($history as $h){?>
                                          <tr>
-                                             <td>08-12-18</td>
+                                             <td><?=date_format(date_create($h->time),"d-m-Y")?></td>
                                              <td><?=$h->username?></td>
                                              <td><?=$h->email?></td>
                                              <td><?=$h->transfer_from?>-<?=$h->transfer_to?></td>
