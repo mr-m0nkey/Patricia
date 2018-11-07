@@ -14,6 +14,8 @@ $currency['bitcoin'] = "BTC";
 $currency['dollars'] = "USD";
 $currency['naira'] = "NGN";
 $currency['cedis'] = "GHS";
+$currency['renminbi'] = "CNY";
+
 
 //functions
 function getRate($from, $to){

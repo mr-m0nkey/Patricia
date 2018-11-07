@@ -7,8 +7,9 @@ if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
   header("location: $app_root");
 }
 if(isset($_GET['id'])){
+  $id = test_input($_GET['id']);
   $stmt = $db->prepare("SELECT users.first_name, history.reference, users.avatar, users.last_name, history.id, users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time, history.user_id FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.id = ? AND status = 'pending'");
-  $stmt->execute([$_GET['id']]);
+  $stmt->execute([$id]);
   if($stmt->rowCount()){
       $history = $stmt->fetchAll(PDO::FETCH_OBJ);
   }else{
@@ -18,32 +19,34 @@ if(isset($_GET['id'])){
 
 }
 
-if(isset($_POST['decline'])){
-  // TODO: add try block
-  $user_id = test_input(filter_input(INPUT_POST, 'decline_user_id'));
-  $history_id = test_input(filter_input(INPUT_POST, 'decline_id'));
-  $reason = test_input(filter_input(INPUT_POST, 'reason'));
-  $stmt = $db->prepare("INSERT INTO alerts (user_id, history_id, reason, action) VALUES (?, ?, ?, ?)");
-  $stmt->execute([$user_id, $history_id, $reason, 'declined']);
-  $stmt = $db->prepare("UPDATE history SET status = 'declined' WHERE id = ?");
-  $stmt->execute([$history_id]);
-  // TODO: send mail to user
-  header("location: $app_root"."dashboard/admin/pending.php");
-}
-
-if(isset($_POST['completed'])){
-  // TODO: add try block
-  $user_id = test_input(filter_input(INPUT_POST, 'completed_user_id'));
-  $history_id = test_input(filter_input(INPUT_POST, 'completed_id'));
-  $stmt = $db->prepare("INSERT INTO alerts (user_id, history_id, action) VALUES (?, ?, ?)");
-  $stmt->execute([$user_id, $history_id, 'completed']);
-  $stmt = $db->prepare("UPDATE history SET status = 'completed' WHERE id = ?");
-  $stmt->execute([$history_id]);
-  // TODO: Send mail to user
-  header("location: $app_root"."dashboard/admin/pending.php");
-}
 
 if($load === true){
+
+  if(isset($_POST['decline'])){
+    // TODO: add try block
+    $user_id = test_input(filter_input(INPUT_POST, 'decline_user_id'));
+    $history_id = test_input(filter_input(INPUT_POST, 'decline_id'));
+    $reason = test_input(filter_input(INPUT_POST, 'reason'));
+    $stmt = $db->prepare("INSERT INTO alerts (user_id, history_id, reason, action) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$user_id, $history_id, $reason, 'declined']);
+    $stmt = $db->prepare("UPDATE history SET status = 'declined' WHERE id = ?");
+    $stmt->execute([$history_id]);
+    // TODO: send mail to user
+    header("location: $app_root"."dashboard/admin/pending.php");
+  }
+
+  if(isset($_POST['completed'])){
+    // TODO: add try block
+    $user_id = test_input(filter_input(INPUT_POST, 'completed_user_id'));
+    $history_id = test_input(filter_input(INPUT_POST, 'completed_id'));
+    $stmt = $db->prepare("INSERT INTO alerts (user_id, history_id, action) VALUES (?, ?, ?)");
+    $stmt->execute([$user_id, $history_id, 'completed']);
+    $stmt = $db->prepare("UPDATE history SET status = 'completed' WHERE id = ?");
+    $stmt->execute([$history_id]);
+    // TODO: Send mail to user
+    header("location: $app_root"."dashboard/admin/pending.php");
+  }
+
 
 
 ?>

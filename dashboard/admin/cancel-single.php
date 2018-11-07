@@ -7,8 +7,9 @@ if(!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== "admin"){
   header("location: $app_root");
 }
 if(isset($_GET['id'])){
+  $id = test_input($_GET['id']);
   $stmt = $db->prepare("SELECT users.first_name, history.reference, users.avatar, users.last_name, history.id, users.username, history.email, history.transfer_from, history.transfer_to, history.amount, history.equivalence, history.usd_account_number, history.status, history.time, history.user_id FROM history LEFT OUTER JOIN users ON history.user_id = users.id where history.id = ? AND status = 'declined'");
-  $stmt->execute([$_GET['id']]);
+  $stmt->execute([$id]);
   if($stmt->rowCount()){
       $history = $stmt->fetchAll(PDO::FETCH_OBJ);
   }else{
@@ -20,7 +21,20 @@ if(isset($_GET['id'])){
 
 
 if($load === true){
+  if(isset($_POST['successful'])){
+    $message = test_input($_POST['message']);
+    $history_id = test_input($_POST['id']);
+    $email = test_input($_POST['email']);
+    $user_id = test_input(filter_input(INPUT_POST, 'user_id'));
 
+
+    $stmt = $db->prepare("INSERT INTO alerts (user_id, history_id, action, reason) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$user_id, $history_id, 'completed', $message]);
+    $stmt = $db->prepare("UPDATE history SET status = 'completed' WHERE id = ?");
+    $stmt->execute([$history_id]);
+    // TODO: Send mail to user
+    header("location: $app_root"."dashboard/admin/cancel.php");
+  }
 
 ?>
 
@@ -338,24 +352,27 @@ if($load === true){
                 <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel1">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
+                          <form action="" method="post">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                 <h4 class="modal-title" id="exampleModalLabel1">Declined Transaction</h4> </div>
                             <div class="modal-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="recipient-name" class="control-label">Email ID:</label>
-                                        <input type="text" class="form-control" id="recipient-name1" disabled="" value="ssojirin@gmail.com"> </div>
-                                    <div class="form-group">
-                                        <label for="message-text" class="control-label">Message:</label>
-                                        <textarea rows="5" class="form-control" id="message-text1" placeholder="Write your Message here..."></textarea>
-                                    </div>
-                                </form>
+                                  <div class="form-group">
+                                      <label for="recipient-name" class="control-label">Email ID:</label>
+                                      <input type="text" class="form-control" id="recipient-name1" disabled="" value="<?=$history[0]->email?>"> </div>
+                                  <div class="form-group">
+                                      <label for="message-text" class="control-label">Message:</label>
+                                      <textarea rows="5" name="message" class="form-control" id="message-text1" placeholder="Write your Message here..."></textarea>
+                                  </div>
                             </div>
                             <div class="modal-footer modal-center">
                                 <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
-                                <button type="button" class="btn btn-success btn-lg">Submit</button>
+                                <input type="hidden" name="id" value="<?=$history[0]->id?>">
+                                <input type="hidden" name="email" value="<?=$history[0]->email?>">
+                                <input type="hidden" name="user_id" value="<?=$history[0]->user_id?>">
+                                <input type="submit" class="btn btn-success btn-lg" name="successful" value="Submit">
                             </div>
+                          </form>
                         </div>
                     </div>
                 </div>

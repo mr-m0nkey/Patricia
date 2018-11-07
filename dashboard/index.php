@@ -51,350 +51,473 @@ if(!isset($_SESSION['user_id'])){
 
 <body class="fix-sidebar">
     <div id="app">
-    <!-- Preloader -->
-    <!-- <div class="preloader">
+        <!-- Preloader -->
+        <!-- <div class="preloader">
         <svg class="circular" viewBox="25 25 50 50">
             <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
         </svg>
     </div> -->
-    <div id="wrapper">
-        <!-- Top Navigation -->
-        <nav class="navbar navbar-default navbar-static-top m-b-0">
-            <div class="navbar-header">
-                <!-- Toggle icon for mobile view -->
-                <div class="top-left-part">
-                    <!-- Logo -->
+        <div id="wrapper">
+            <!-- Top Navigation -->
+            <nav class="navbar navbar-default navbar-static-top m-b-0">
+                <div class="navbar-header">
+                    <!-- Toggle icon for mobile view -->
+                    <div class="top-left-part">
+                        <!-- Logo -->
 
-                </div>
-                <!-- /Logo -->
-                <!-- Search input and Toggle icon -->
-                <ul class="nav navbar-top-links navbar-left">
-                    <li>
-                        <a href="javascript:void(0)" class="open-close waves-effect waves-light visible-xs">
-                            <i class="ti-close ti-menu"></i>
-                        </a>
-                    </li>
-                    <li><a class="logo" href="index.php">
-                        <img class="dash-logo-view" src="plugins/images/patricia/patriciax-logo-white.png" alt="Home">
-                    </a></li>
-                </ul>
-                <!-- This is the message dropdown -->
-                <ul class="nav navbar-top-links navbar-right pull-right">
-                    <!-- /.Task dropdown -->
-                    <!-- /.dropdown -->
-                    <li>
-                        <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
-                            <input type="text" placeholder="Search..." class="form-control">
-                            <a href="">
-                                <i class="fa fa-search"></i>
-                            </a>
-                        </form>
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
-                            <i class="mdi mdi-bell"></i>
-                            <div class="notify">
-                                <span class="heartbit"></span>
-                                <span class="point"></span>
-                            </div>
-                        </a>
-                        <ul class="dropdown-menu mailbox  animated slideInUp">
-                            <li>
-                                <div class="drop-title">You have 4 new messages</div>
-                            </li>
-                            <li>
-                                <div class="message-center">
-                                    <a href="#">
-                                        <div class="user-img">
-                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" class="img-circle">
-                                            <span class="profile-status online pull-right"></span>
-                                        </div>
-                                        <div class="mail-contnet">
-                                            <h5>Seyike Sojirin</h5>
-                                            <span class="mail-desc">Just see the my admin!</span>
-                                            <span class="time">9:30 AM</span>
-                                        </div>
-                                    </a>
-                                </div>
-                            </li>
-                            <li>
-                                <a class="text-center" href="javascript:void(0);">
-                                    <strong>See all notifications</strong>
-                                    <i class="fa fa-angle-right"></i>
-                                </a>
-                            </li>
-                        </ul>
-                        <!-- /.dropdown-messages -->
-                    </li>
-                    <li class="dropdown">
-                        <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
-                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img" width="36" class="img-circle">
-                            <b class="hidden-xs"><?=$_SESSION['first_name']?></b>
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu dropdown-user animated slideInUp">
-                            <li>
-                                <div class="dw-user-box">
-                                    <div class="u-img">
-                                        <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user" />
-                                    </div>
-                                    <div class="u-text">
-                                        <h4><?=$_SESSION['first_name']?>  <?=$_SESSION['last_name']?></h4>
-                                        <p class="text-muted"><?=$_SESSION['email']?></p>
-                                        <a href="profile.php" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
-                                    </div>
-                                </div>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="profile.php">
-                                    <i class="ti-user"></i> My Profile</a>
-                            </li>
-                            <li>
-                                <a href="history.php">
-                                    <i class="ti-wallet"></i> History</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="settings.php">
-                                    <i class="ti-settings"></i> Account Setting</a>
-                            </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="<?=$app_root?>logout.php">
-                                    <i class="fa fa-power-off"></i> Logout</a>
-                            </li>
-                        </ul>
-                        <!-- /.dropdown-user -->
-                    </li>
-
-                    <!-- /.dropdown -->
-                </ul>
-            </div>
-            <!-- /.navbar-header -->
-            <!-- /.navbar-top-links -->
-            <!-- /.navbar-static-side -->
-        </nav>
-        <!-- End Top Navigation -->
-        <!-- Left navbar-header -->
-        <div class="navbar-default sidebar" role="navigation">
-            <div class="sidebar-nav slimscrollsidebar">
-                <div class="sidebar-head">
-                    <h3>
-                        <span class="fa-fw open-close">
-                            <!-- <i class="ti-menu hidden-xs"></i> -->
-                            <i class="ti-close visible-xs"></i>
-                        </span>
-                        <span class="hide-menu">
-                            <img class="dash-logo" src="plugins/images/patricia/patriciax-logo-white.png" alt="Home">
-                        </span>
-                    </h3>
-                </div>
-                <ul class="nav" id="side-menu">
-                    <li>
-                        <a href="javascript:void(0)" class="waves-effect active">
-                            <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
-                            <span class="hide-menu">Exchange </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="history.php" class="waves-effect">
-                            <i data-icon="v" class="mdi mdi-history fa-fw"></i>
-                            <span class="hide-menu">History </span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="profile.php" class="waves-effect">
-                            <i data-icon="v" class="mdi mdi-account fa-fw"></i>
-                            <span class="hide-menu">Profile </span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- Left navbar-header end -->
-        <!-- ============================================================== -->
-
-        <!-- Page Content -->
-        <!-- ============================================================== -->
-        <div id="page-wrapper">
-            <div class="container-fluid">
-                <div class="row bg-title">
-                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Start Exchange</h4>
                     </div>
-                    <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
-                        <!-- <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20">
+                    <!-- /Logo -->
+                    <!-- Search input and Toggle icon -->
+                    <ul class="nav navbar-top-links navbar-left">
+                        <li>
+                            <a href="javascript:void(0)" class="open-close waves-effect waves-light visible-xs">
+                                <i class="ti-close ti-menu"></i>
+                            </a>
+                        </li>
+                        <li><a class="logo" href="index.php">
+                                <img class="dash-logo-view" src="plugins/images/patricia/patriciax-logo-white.png" alt="Home">
+                            </a></li>
+                    </ul>
+                    <!-- This is the message dropdown -->
+                    <ul class="nav navbar-top-links navbar-right pull-right">
+                        <!-- /.Task dropdown -->
+                        <!-- /.dropdown -->
+                        <li>
+                            <form role="search" class="app-search hidden-sm hidden-xs m-r-10">
+                                <input type="text" placeholder="Search..." class="form-control">
+                                <a href="">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                            </form>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle waves-effect waves-light" data-toggle="dropdown" href="#">
+                                <i class="mdi mdi-bell"></i>
+                                <div class="notify">
+                                    <span class="heartbit"></span>
+                                    <span class="point"></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu mailbox  animated slideInUp">
+                                <li>
+                                    <div class="drop-title">You have 4 new messages</div>
+                                </li>
+                                <li>
+                                    <div class="message-center">
+                                        <a href="#">
+                                            <div class="user-img">
+                                                <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>"
+                                                    alt="user" class="img-circle">
+                                                <span class="profile-status online pull-right"></span>
+                                            </div>
+                                            <div class="mail-contnet">
+                                                <h5>Seyike Sojirin</h5>
+                                                <span class="mail-desc">Just see the my admin!</span>
+                                                <span class="time">9:30 AM</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a class="text-center" href="javascript:void(0);">
+                                        <strong>See all notifications</strong>
+                                        <i class="fa fa-angle-right"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                            <!-- /.dropdown-messages -->
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#">
+                                <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>" alt="user-img"
+                                    width="36" class="img-circle">
+                                <b class="hidden-xs">
+                                    <?=$_SESSION['first_name']?></b>
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated slideInUp">
+                                <li>
+                                    <div class="dw-user-box">
+                                        <div class="u-img">
+                                            <img src="<?=$app_root?>dashboard/plugins/images/users/<?=$_SESSION['avatar']?>"
+                                                alt="user" />
+                                        </div>
+                                        <div class="u-text">
+                                            <h4>
+                                                <?=$_SESSION['first_name']?>
+                                                <?=$_SESSION['last_name']?>
+                                            </h4>
+                                            <p class="text-muted">
+                                                <?=$_SESSION['email']?>
+                                            </p>
+                                            <a href="profile.php" class="btn btn-rounded btn-danger btn-sm">View
+                                                Profile</a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="profile.php">
+                                        <i class="ti-user"></i> My Profile</a>
+                                </li>
+                                <li>
+                                    <a href="history.php">
+                                        <i class="ti-wallet"></i> History</a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="settings.php">
+                                        <i class="ti-settings"></i> Account Setting</a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="<?=$app_root?>logout.php">
+                                        <i class="fa fa-power-off"></i> Logout</a>
+                                </li>
+                            </ul>
+                            <!-- /.dropdown-user -->
+                        </li>
+
+                        <!-- /.dropdown -->
+                    </ul>
+                </div>
+                <!-- /.navbar-header -->
+                <!-- /.navbar-top-links -->
+                <!-- /.navbar-static-side -->
+            </nav>
+            <!-- End Top Navigation -->
+            <!-- Left navbar-header -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav slimscrollsidebar">
+                    <div class="sidebar-head">
+                        <h3>
+                            <span class="fa-fw open-close">
+                                <!-- <i class="ti-menu hidden-xs"></i> -->
+                                <i class="ti-close visible-xs"></i>
+                            </span>
+                            <span class="hide-menu">
+                                <img class="dash-logo" src="plugins/images/patricia/patriciax-logo-white.png" alt="Home">
+                            </span>
+                        </h3>
+                    </div>
+                    <ul class="nav" id="side-menu">
+                        <li>
+                            <a href="javascript:void(0)" class="waves-effect active">
+                                <i data-icon="v" class="mdi mdi-av-timer fa-fw"></i>
+                                <span class="hide-menu">Exchange </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="history.php" class="waves-effect">
+                                <i data-icon="v" class="mdi mdi-history fa-fw"></i>
+                                <span class="hide-menu">History </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="profile.php" class="waves-effect">
+                                <i data-icon="v" class="mdi mdi-account fa-fw"></i>
+                                <span class="hide-menu">Profile </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Left navbar-header end -->
+            <!-- ============================================================== -->
+
+            <!-- Page Content -->
+            <!-- ============================================================== -->
+            <div id="page-wrapper">
+                <div class="container-fluid">
+                    <div class="row bg-title">
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                            <h4 class="page-title">Start Exchange</h4>
+                        </div>
+                        <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                            <!-- <button class="right-side-toggle waves-effect waves-light btn-info btn-circle pull-right m-l-20">
                             <i class="ti-settings text-white"></i>
                         </button> -->
-                        <ol class="breadcrumb">
-                            <li class="">
-                                <a href="index.php">Dashboard</a>
-                            </li>
-                            <li class="active">Exchange</li>
-                        </ol>
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-
-
-                <!-- Add Main Content -->
-                <!-- /row -->
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="panel wallet-widgets white-box p-0">
-                                    <ul class="wallet-list">
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input v-on:click="showMobileMenu = !showMobileMenu" value="BTC" v-model="convertFrom" class="radiocheck" id="bitcoin" name="convertFrom" type="radio">
-                                                <label class="label-for" for="bitcoin" name="convertFrom">Bitcoin</label>
-                                                <!-- <span v-bind:class="{ hide: showMobileMenu }">
-                                                    <span class="fa fa-check text-color pull-right check-icon"></span>
-                                                </span> -->
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="PM" v-model="convertFrom" class="radiocheck" id="perfect" name="convertFrom" type="radio">
-                                                <label class="label-for" for="perfect" name="convertFrom">Perfect Money</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="US" v-model="convertFrom" class="radiocheck" id="us" name="convertFrom" type="radio">
-                                                <label class="label-for" for="us" name="convertFrom">US Dollars</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="NGN" v-model="convertFrom" class="radiocheck" id="naira" name="convertFrom" type="radio">
-                                                <label class="label-for" for="naira" name="convertFrom">Naira</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="Cedis" v-model="convertFrom" class="radiocheck" id="cedis" name="convertFrom" type="radio">
-                                                <label class="label-for" for="cedis" name="convertFrom">Ghana Cedis</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="Renminbi" v-model="convertFrom" class="radiocheck" id="renminbi" name="convertFrom" type="radio">
-                                                <label class="label-for" for="renminbi" name="convertFrom">Renminbi</label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="panel wallet-widgets p-0" style="margin-bottom: 8px!important;">
-                                    <div class="panel-body" style="min-height: 334px;">
-                                        <!-- <h3>Select Currency to Exchange</h3> -->
-                                        <form class="form-horizontal form-x">
-                                            <div class="form-group">
-                                                <label class="col-md-12">{{convertFrom}} / {{convertTo}}: <span class="text-color">{{rate}}</span> <span class="help pull-right"> Rate: <span class="text-color">2%</span></span></label>
-                                                <div class="col-md-12">
-                                                    <input type="text" class="form-control" value="0" v-model="amount"> </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <input type="text" id="equivalent" class="form-control" value="0" v-model="equivalent" disabled> </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <input type="text" id="usd-account-number" value="" class="form-control" placeholder="USD Account Number"> </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <input type="text" id="email-address" value="" class="form-control" placeholder="Email Address"> </div>
-                                            </div>
-                                            <button class="btn btn-block btn-orange btn-exchange">Exchange</button>
-                                        </form>
-
-                                        <!-- Scan to Pay -->
-                                        <div class="scan-code text-center">
-                                            <p class="text-bold">Scan to pay into this Wallet</p>
-                                            <img src="plugins/images/qr-code.png" class="img-fluid img-responsive">
-                                            <p class="text-bold">or pay into this wallet address</p>
-                                            <p class="qr-address">FHNDSKFD232MNDSDK2E2KS1021</p>
-                                        </div>
-
-                                        <!-- Scan to Pay -->
-                                    </div>
-                                </div>
-                                <div class="panel wallet-widgets p-0">
-                                    <div class="panel-body" style="min-height: 120px;">
-                                        <!-- <h3>Select Currency to Exchange</h3> -->
-                                        <div class="lds-css ng-scope">
-                                            <div class="lds-spinner" style="100%;height:100%"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="panel wallet-widgets white-box p-0">
-                                    <ul class="wallet-list">
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input v-on:click="showMobileMenu = !showMobileMenu" value="BTC" v-model="convertTo" class="radiocheck" id="bitcoin2" name="convertTo" type="radio">
-                                                <label class="label-for" for="bitcoin2" name="convertTo">Bitcoin</label>
-                                                <!-- <span v-bind:class="{ hide: showMobileMenu }">
-                                                    <span class="fa fa-check text-color pull-right check-icon"></span>
-                                                </span> -->
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="PM" v-model="convertTo" class="radiocheck" id="perfect2" name="convertTo" type="radio">
-                                                <label class="label-for" for="perfect2" name="convertTo">Perfect Money</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="US" v-model="convertTo" class="radiocheck" id="us2" name="convertTo" type="radio">
-                                                <label class="label-for" for="us2" name="convertTo">US Dollars</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="NGN" v-model="convertTo" class="radiocheck" id="naira2" name="convertTo" type="radio">
-                                                <label class="label-for" for="naira2" name="convertTo">Naira</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="Cedis" v-model="convertTo" class="radiocheck" id="cedis2" name="convertTo" type="radio">
-                                                <label class="label-for" for="cedis2" name="convertTo">Ghana Cedis</label>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div class="radio radio-hide radio-circle radio-info">
-                                                <input value="Renminbi" v-model="convertTo" class="radiocheck" id="renminbi2" name="convertTo" type="radio">
-                                                <label class="label-for" for="renminbi2" name="convertTo">Renminbi</label>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                            <ol class="breadcrumb">
+                                <li class="">
+                                    <a href="index.php">Dashboard</a>
+                                </li>
+                                <li class="active">Exchange</li>
+                            </ol>
                         </div>
-                        <div class="white-box">
-                            <h3 class="box-title m-b-0">History</h3>
-                            <!-- <p class="text-muted m-b-30">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p> -->
-                            <div class="table-responsive">
-                                <table id="myTable" class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Amount</th>
-                                            <th>From</th>
-                                            <th>To</th>
-                                            <th>Equivalence</th>
-                                            <th>Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                      <?php
+                        <!-- /.col-lg-12 -->
+                    </div>
+
+
+                    <!-- Add Main Content -->
+                    <!-- /row -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="panel wallet-widgets white-box p-0">
+                                        <ul class="wallet-list">
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input v-on:click="showMobileMenu = !showMobileMenu" value="BTC"
+                                                        v-model="convertFrom" class="radiocheck" id="bitcoin" name="convertFrom"
+                                                        type="radio">
+                                                    <label class="label-for" for="bitcoin" name="convertFrom">Bitcoin</label>
+                                                    <!-- <span v-bind:class="{ hide: showMobileMenu }">
+                                                    <span class="fa fa-check text-color pull-right check-icon"></span>
+                                                </span> -->
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="PM" v-model="convertFrom" class="radiocheck" id="perfect"
+                                                        name="convertFrom" type="radio">
+                                                    <label class="label-for" for="perfect" name="convertFrom">Perfect
+                                                        Money</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="US" v-model="convertFrom" class="radiocheck" id="us"
+                                                        name="convertFrom" type="radio">
+                                                    <label class="label-for" for="us" name="convertFrom">US Dollars</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="NGN" v-model="convertFrom" class="radiocheck" id="naira"
+                                                        name="convertFrom" type="radio">
+                                                    <label class="label-for" for="naira" name="convertFrom">Naira</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="Cedis" v-model="convertFrom" class="radiocheck" id="cedis"
+                                                        name="convertFrom" type="radio">
+                                                    <label class="label-for" for="cedis" name="convertFrom">Ghana Cedis</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="CNY" v-model="convertFrom" class="radiocheck" id="renminbi"
+                                                        name="convertFrom" type="radio">
+                                                    <label class="label-for" for="renminbi" name="convertFrom">Renminbi</label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel wallet-widgets p-0" style="margin-bottom: 8px!important;">
+                                        <div class="panel-body" style="min-height: 334px;">
+                                            <!-- <h3>Select Currency to Exchange</h3> -->
+                                            <form class="form-horizontal form-x" method="post" action="">
+                                            <div class = "form-x-d">
+                                            <input type="hidden" class="form-control" name="equivalent"
+                                                            v-model="equivalent">
+                                                <input type="hidden" v-model="getCode(convertFrom)" name="convert_from">
+                                                <input type="hidden" v-model="getCode(convertTo)" name="convert_to">
+                                                <div class="form-group">
+                                                    <label class="col-md-12">{{convertFrom}} / {{convertTo}}: <span
+                                                            class="text-color">{{rate}}</span> <span class="help pull-right">
+                                                            Rate: <span class="text-color">2%</span></span></label>
+                                                    <div class="col-md-12">
+                                                        <input type="text" class="form-control" name="amount" v-model="amount">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="text" id="equivalent" class="form-control"
+                                                            v-model="equivalent" disabled>
+                                                    </div>
+                                                </div>
+                                                <div v-if="convertTo === 'BTC'" class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="text" id="usd-account-number" name="payment_details"
+                                                            class="form-control" placeholder="Recepient's Bitcoin Wallet">
+                                                    </div>
+                                                </div>
+                                                <div v-else-if="convertTo === 'PM'" class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="text" id="usd-account-number" name="payment_details"
+                                                            class="form-control" placeholder="Recepient's Perfect Money Wallet">
+                                                    </div>
+                                                </div>
+                                                <div v-else-if="convertTo === 'Cedis'" class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="text" id="usd-account-number" name="payment_details"
+                                                            class="form-control" placeholder="Mobile Money Account">
+                                                    </div>
+                                                </div>
+                                                <div v-else-if="convertTo === 'US'" class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="text" id="usd-account-number" name="payment_details"
+                                                            class="form-control" placeholder="Recepient's Paypal">
+                                                    </div>
+                                                </div>
+                                                <div v-else-if="convertTo === 'NGN'">
+                                                    <div class="col-md-12 form-group">
+                                                        <input type="text" name="account_name" id="account-name"
+                                                            class="form-control" placeholder="Recepient's Account Name">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <input type="text" name="payment_details" id="usd-account-number"
+                                                            class="form-control" placeholder="Recepient's Account Number">
+                                                    </div>
+                                                    <div class="col-md-12 form-group">
+                                                        <input type="text" name="bank" id="account-bank" class="form-control"
+                                                            placeholder="Recepient's Bank">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div class="col-md-12">
+                                                        <input type="text" id="email-address" name="email" 
+                                                            class="form-control" placeholder="Email Address"> </div>
+                                                </div>
+                                                <input id="submit-exchange" type="submit" name="submit-exchange" value="exchange"
+                                                    style="display: none;">
+                                                <button class="btn btn-block btn-orange btn-exchange">Exchange</button>
+
+</div>
+                                                <!-- Scan to Pay -->
+                                                <div class="scan-code text-center" v-if="convertFrom === 'BTC'">
+                                                    <p class="text-bold">Scan to pay into this Wallet</p>
+                                                    <img src="plugins/images/qr-code.png" class="img-fluid img-responsive">
+                                                    <p class="text-bold">or pay into this wallet address</p>
+                                                    <p class="qr-address">FHNDSKFD232MNDSDK2E2KS1021</p>
+                                                    <p>Pay into this account and send a screenshot of the payment</p>
+                                                    <div class="form-group"><input class="form-control" accept=".jpg, .jpeg, .png"
+                                                            type="file" name="picture" id="picture">
+                                                    </div>
+                                                    <button class="btn btn-block btn-orange" id = "confirm-payment">Confirm Payment</button>
+                                                </div>
+                                                <div class="scan-code text-center" v-else-if="convertFrom === 'Cedis'">
+                                                    <p class="text-bold">pay into this mobile money account address</p>
+                                                    <p class="qr-address">Mobile money number thingy</p>
+                                                    <p>Pay into this account and send a screenshot of the payment</p>
+                                                    <div class="form-group"><input class="form-control" accept=".jpg, .jpeg, .png"
+                                                            type="file" name="picture" id="picture">
+                                                    </div>
+                                                    <button class="btn btn-block btn-orange" id = "confirm-payment">Confirm Payment</button>
+                                                </div>
+                                                <div class="scan-code text-center" v-else-if="convertFrom === 'PM'">
+                                                    <p class="text-bold">Pay into this wallet address</p>
+                                                    <p class="qr-address">PM wallet address</p> 
+                                                    <p>Pay into this account and send a screenshot of the payment</p>
+                                                    <div class="form-group"><input class="form-control" accept=".jpg, .jpeg, .png"
+                                                            type="file" name="picture" id="picture">
+                                                    </div>
+                                                    <button class="btn btn-block btn-orange" id = "confirm-payment">Confirm Payment</button>
+                                                </div>
+                                                <div class="scan-code text-center" v-else-if="convertFrom === 'CNY'">
+                                                    <p class="text-bold">Pay into this wallet address</p>
+                                                    <p class="qr-address">Yuan wallet address</p>
+                                                    <p>Pay into this account and send a screenshot of the payment</p>
+                                                    <div class="form-group"><input class="form-control" accept=".jpg, .jpeg, .png"
+                                                            type="file" name="picture" id="picture">
+                                                    </div>
+                                                    <button class="btn btn-block btn-orange" id = "confirm-payment">Confirm Payment</button>
+                                                </div>
+                                                
+
+                                                <!-- Scan to Pay -->
+                                            </form>
+
+
+                                        </div>
+                                    </div>
+                                    <div class="panel wallet-widgets p-0">
+                                        <div class="panel-body" style="min-height: 120px;">
+                                            <!-- <h3>Select Currency to Exchange</h3> -->
+                                            <div class="lds-css ng-scope">
+                                                <div class="lds-spinner" style="100%;height:100%">
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                    <div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel wallet-widgets white-box p-0">
+                                        <ul class="wallet-list">
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input v-on:click="showMobileMenu = !showMobileMenu" value="BTC"
+                                                        v-model="convertTo" class="radiocheck" id="bitcoin2" name="convertTo"
+                                                        type="radio">
+                                                    <label class="label-for" for="bitcoin2" name="convertTo">Bitcoin</label>
+                                                    <!-- <span v-bind:class="{ hide: showMobileMenu }">
+                                                    <span class="fa fa-check text-color pull-right check-icon"></span>
+                                                </span> -->
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="PM" v-model="convertTo" class="radiocheck" id="perfect2"
+                                                        name="convertTo" type="radio">
+                                                    <label class="label-for" for="perfect2" name="convertTo">Perfect
+                                                        Money</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="US" v-model="convertTo" class="radiocheck" id="us2"
+                                                        name="convertTo" type="radio">
+                                                    <label class="label-for" for="us2" name="convertTo">US Dollars</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="NGN" v-model="convertTo" class="radiocheck" id="naira2"
+                                                        name="convertTo" type="radio">
+                                                    <label class="label-for" for="naira2" name="convertTo">Naira</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="Cedis" v-model="convertTo" class="radiocheck" id="cedis2"
+                                                        name="convertTo" type="radio">
+                                                    <label class="label-for" for="cedis2" name="convertTo">Ghana Cedis</label>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="radio radio-hide radio-circle radio-info">
+                                                    <input value="CNY" v-model="convertTo" class="radiocheck" id="renminbi2"
+                                                        name="convertTo" type="radio">
+                                                    <label class="label-for" for="renminbi2" name="convertTo">Renminbi</label>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="white-box">
+                                <h3 class="box-title m-b-0">History</h3>
+                                <!-- <p class="text-muted m-b-30">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p> -->
+                                <div class="table-responsive">
+                                    <table id="myTable" class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Amount</th>
+                                                <th>From</th>
+                                                <th>To</th>
+                                                <th>Equivalence</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php
                                       $stmt = $db->prepare("SELECT equivalence, transfer_from, transfer_to, usd_account_number, email, amount, status  FROM history WHERE user_id = ?");
                                       $stmt->execute([$_SESSION['user_id']]);
                                       if($stmt->rowCount()){
@@ -404,219 +527,247 @@ if(!isset($_SESSION['user_id'])){
                                       }
                                        ?>
 
-                                       <?php foreach($history as $h){?>
-                                         <tr>
-                                             <td><?=$h->amount?></td>
-                                             <td><?=$h->transfer_from?></td>
-                                             <td><?=$h->transfer_to?></td>
-                                             <td><?=$h->equivalence?></td>
-                                             <td class="<?=$h->status?>"><?=$h->status?></td>
-                                         </tr>
-                         											<?php	}	?>
-                                    </tbody>
-                                </table>
+                                            <?php foreach($history as $h){?>
+                                            <tr>
+                                                <td>
+                                                    <?=$h->amount?>
+                                                </td>
+                                                <td>
+                                                    <?=$h->transfer_from?>
+                                                </td>
+                                                <td>
+                                                    <?=$h->transfer_to?>
+                                                </td>
+                                                <td>
+                                                    <?=$h->equivalence?>
+                                                </td>
+                                                <td class="<?=$h->status?>">
+                                                    <?=$h->status?>
+                                                </td>
+                                            </tr>
+                                            <?php	}	?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- /.row -->
+                    <!-- ============================================================== -->
+
+
+
+                    <!-- Main Content -->
+
                 </div>
-                <!-- /.row -->
-                <!-- ============================================================== -->
-
-
-
-                <!-- Main Content -->
-
+                <!-- /.container-fluid -->
+                <footer class="footer text-center"> 2018 &copy; Patricia </footer>
             </div>
-            <!-- /.container-fluid -->
-            <footer class="footer text-center"> 2018 &copy; Patricia </footer>
+            <!-- ============================================================== -->
+            <!-- End Page Content -->
+            <!-- ============================================================== -->
+
         </div>
-        <!-- ============================================================== -->
-        <!-- End Page Content -->
-        <!-- ============================================================== -->
-
+        <!-- /#wrapper -->
     </div>
-    <!-- /#wrapper -->
-</div>
 
-<script>
-
-
-
-
-</script>
-
-    </body>
-    <!-- jQuery -->
-    <script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
-    <!-- Sidebar menu plugin JavaScript -->
-    <script src="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
-    <!--Slimscroll JavaScript For custom scroll-->
-    <script src="js/jquery.slimscroll.js"></script>
-    <!--Wave Effects -->
-    <script src="js/waves.js"></script>
-
-    <script src="js/vue.min.js"></script>
-
-
-
-
-    <!-- Custom Theme JavaScript -->
-    <script src="js/custom.min.js"></script>
-    <script src="plugins/bower_components/datatables/jquery.dataTables.min.js"></script>
-    <!-- start - This is for export functionality only -->
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
-    <script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
-    <script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
-    <!-- end - This is for export functionality only -->
-
-    <script src="https://js.paystack.co/v1/inline.js"></script>
     <script>
-        $(document).ready(function () {
-
-            $( ".btn-exchange" ).click(function( event ) {
-                event.preventDefault();
-                if(!document.getElementById('email-address').value || !document.getElementById('usd-account-number').value || !document.getElementById('equivalent').value){
-                  // TODO: validation
-                }else {
-                  pay();
-
-                }
-
-            });
 
 
-            $('#myTable').DataTable();
-            $(document).ready(function () {
-                var table = $('#example').DataTable({
-                    "columnDefs": [{
-                        "visible": false,
-                        "targets": 2
-                    }],
-                    "order": [
-                        [2, 'asc']
-                    ],
-                    "displayLength": 25,
-                    "drawCallback": function (settings) {
-                        var api = this.api();
-                        var rows = api.rows({
-                            page: 'current'
-                        }).nodes();
-                        var last = null;
-                        api.column(2, {
-                            page: 'current'
-                        }).data().each(function (group, i) {
-                            if (last !== group) {
-                                $(rows).eq(i).before(
-                                    '<tr class="group"><td colspan="5">' +
-                                    group + '</td></tr>');
-                                last = group;
-                            }
-                        });
-                    }
-                });
-                // Order by the grouping
-                $('#example tbody').on('click', 'tr.group', function () {
-                    var currentOrder = table.order()[0];
-                    if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
-                        table.order([2, 'desc']).draw();
-                    } else {
-                        table.order([2, 'asc']).draw();
-                    }
-                });
-            });
-        });
-        $('#example23').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ]
-        });
+
 
     </script>
 
-    <script type="text/javascript">
+</body>
+<!-- jQuery -->
+<script src="plugins/bower_components/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- Sidebar menu plugin JavaScript -->
+<script src="plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+<!--Slimscroll JavaScript For custom scroll-->
+<script src="js/jquery.slimscroll.js"></script>
+<!--Wave Effects -->
+<script src="js/waves.js"></script>
+
+<script src="js/vue.min.js"></script>
 
 
-    function pay(){
-      if(getCode(data.convertFrom) === "NGN" || getCode(data.convertFrom) === "USD" || getCode(data.convertFrom) === "GHS"){
-        payWithPaystack();
-      }else{
-        $('.form-x').slideUp();
-        $('.scan-code').slideDown();
-        var send = {
-          from: getCode(data.convertFrom),
-          to: getCode(data.convertTo),
-          usd: document.getElementById('usd-account-number').value,
-          email: document.getElementById('email-address').value,
-          amount: data.amount,
-          equivalent: document.getElementById('equivalent').value,
-          reference: Date.now()
-        }
-        $.post("<?=$app_root?>/assets/include/exchange.php", send, function(d, s, x){
+
+
+<!-- Custom Theme JavaScript -->
+<script src="js/custom.min.js"></script>
+<script src="plugins/bower_components/datatables/jquery.dataTables.min.js"></script>
+<!-- start - This is for export functionality only -->
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+<!-- end - This is for export functionality only -->
+
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $(".btn-exchange").click(function (event) {
+            event.preventDefault();
+            if (!document.getElementById('email-address').value || !document.getElementById(
+                    'usd-account-number').value || !document.getElementById('equivalent').value) {
+                // TODO: validation
+            } else {
+                pay();
+
+            }
 
         });
-      }
+
+        $("#confirm-payment").click(function (event) {
+            event.preventDefault();
+            alert("submit");
+            //$('#submit-exchange').click();
+        });
 
 
+        $('#myTable').DataTable();
+        $(document).ready(function () {
+            var table = $('#example').DataTable({
+                "columnDefs": [{
+                    "visible": false,
+                    "targets": 2
+                }],
+                "order": [
+                    [2, 'asc']
+                ],
+                "displayLength": 25,
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({
+                        page: 'current'
+                    }).nodes();
+                    var last = null;
+                    api.column(2, {
+                        page: 'current'
+                    }).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="5">' +
+                                group + '</td></tr>');
+                            last = group;
+                        }
+                    });
+                }
+            });
+            // Order by the grouping
+            $('#example tbody').on('click', 'tr.group', function () {
+                var currentOrder = table.order()[0];
+                if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
+                    table.order([2, 'desc']).draw();
+                } else {
+                    table.order([2, 'asc']).draw();
+                }
+            });
+        });
+    });
+    $('#example23').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ]
+    });
+</script>
 
-    }
+<script type="text/javascript">
+    //TODO separate bitcoin currencies
 
-    function payWithPaystack(){
 
-      var handler = PaystackPop.setup({
-        key: 'pk_test_bf7678f6e0542ee6771c8b072931e4f3fd0f67df',
-        email: document.getElementById('email-address').value,
-        amount: data.amount * 100,
-        currency: getCode(data.convertFrom),
+    function pay() {
+        if (getCode(data.convertFrom) === "NGN") {
+            payWithPaystack();
+        } else if (getCode(data.convertFrom) === "USD") {
+            //pay with paypal
+        } else {
+            $('.form-x-d').slideUp();
+            $('.scan-code').slideDown();
+            //TODO check if all the data is complete
 
-        callback: function(response){
-            var send = {
-              from: getCode(data.convertFrom),
-              to: getCode(data.convertTo),
-              usd: document.getElementById('usd-account-number').value,
-              email: document.getElementById('email-address').value,
-              amount: data.amount,
-              equivalent: document.getElementById('equivalent').value,
-              reference: response.reference
+
+            //$('#submit-exchange').click();
+            /*var send = {
+
+                from: getCode(data.convertFrom),
+                to: getCode(data.convertTo),
+                usd: document.getElementById('usd-account-number').value,
+                email: document.getElementById('email-address').value,
+                amount: data.amount,
+                equivalent: document.getElementById('equivalent').value,
+                reference: Date.now()
             }
-            $.post("<?=$app_root?>/assets/include/exchange.php",send,function(d, s, x){
+            $.post("<?=$app_root?>/assets/include/exchange.php", send, function (d, s, x) {
 
             });
-        },
-        onClose: function(){
-
+            */
         }
-      });
-      handler.openIframe();
+
+
+
     }
 
-  //  payWithPaystack();
+    function payWithPaystack() {
 
-    function getCode(code){
-      switch(code) {
-        case "BTC":
-            return code
-            break;
-        case "PM":
-            return "pm_USD";
-            break;
-        case "US":
-            return "USD";
-            break;
-        case "NGN":
-            return code;
-            break;
-        case "Cedis":
-            return "GHS";
-            break;
-        default:
-            return null;
+        var handler = PaystackPop.setup({
+            key: 'pk_test_bf7678f6e0542ee6771c8b072931e4f3fd0f67df',
+            email: document.getElementById('email-address').value,
+            amount: data.amount * 100,
+            currency: getCode(data.convertFrom),
+
+            callback: function (response) {
+                var send = {
+                    from: getCode(data.convertFrom),
+                    to: getCode(data.convertTo),
+                    usd: document.getElementById('usd-account-number').value,
+                    email: document.getElementById('email-address').value,
+                    amount: data.amount,
+                    equivalent: document.getElementById('equivalent').value,
+                    reference: response.reference
+                }
+                $.post("<?=$app_root?>/assets/include/exchange.php", send, function (d, s, x) {
+                    //TODO make sure data sent
+                });
+            },
+            onClose: function () {
+
+            }
+        });
+        handler.openIframe();
+    }
+
+
+    function getCode(code) {
+
+        switch (code) {
+            case "BTC":
+                return code
+                break;
+            case "CNY":
+                return code
+                break;
+            case "PM":
+                return "pm_USD";
+                break;
+            case "US":
+                return "USD";
+                break;
+            case "NGN":
+                return code;
+                break;
+            case "Cedis":
+                return "GHS";
+                break;
+            default:
+                return null;
         }
     }
 
@@ -629,54 +780,78 @@ if(!isset($_SESSION['user_id'])){
         rate: 0.0,
         amount: 0,
         equivalent: 0,
-        showMobileMenu: true
+        showMobileMenu: true,
+        account_details_placeholder: "",
+        needs_account_details: false,
+        payment_details: "",
 
     }
     new Vue({
         el: '#app',
         data: data,
         methods: {
-            toggleD: function(){
+            toggleD: function () {
                 this.isActive = !this.isActive;
-              // some code to filter users
+                // some code to filter users
             }
         },
-        mounted() {
-        },
+        mounted() {},
         watch: {
-          convertFrom: function(value){
-            if(data.convertTo !== null){
+            convertFrom: function (value) {
+                code = getCode(value);
+                if (code === "GHS") {
+                    //display mobile money number
+                } else if (code === "BTC") {
+                    //display wallet id
+                } else if (code == "pm_USD") {
 
-              $.post("<?=$app_root?>/assets/include/converter.php",{ from: getCode(value), to: getCode(data.convertTo) },function(d, s, x){
-                console.log(d);
-                data.rate = JSON.parse(d).ratetoFixed(4);
-                var i = data.rate * data.amount;
+                } else if (code == "NGN") {
+                    //use paystack
+                } else if (code == "USD") {
+                    //use paypal
+                }
+
+                if (data.convertTo !== null) {
+
+
+
+
+                    $.post("<?=$app_root?>/assets/include/converter.php", {
+                        from: getCode(value),
+                        to: getCode(data.convertTo)
+                    }, function (d, s, x) {
+                        console.log(d);
+                        data.rate = JSON.parse(d).ratetoFixed(4);
+                        var i = data.rate * data.amount;
+                        data.equivalent = i.toFixed(2);
+                        console.log(data.amount);
+                    });
+                }
+            },
+
+            convertTo: function (value) {
+
+
+                if (data.convertFrom !== null) {
+                    $.post("<?=$app_root?>/assets/include/converter.php", {
+                        from: getCode(data.convertFrom),
+                        to: getCode(value)
+                    }, function (d, s, x) {
+                        console.log(d);
+                        data.rate = JSON.parse(d).rate.toFixed(4);
+                        var i = data.rate * data.amount;
+                        data.equivalent = i.toFixed(2);
+                        console.log(data.amount);
+                    });
+                }
+            },
+
+            amount: function (value) {
+                var i = value * data.rate;
                 data.equivalent = i.toFixed(2);
-                console.log(data.amount);
-              });
             }
-          },
-
-          convertTo: function(value){
-            if(data.convertFrom !== null){
-              $.post("<?=$app_root?>/assets/include/converter.php",{ from: getCode(data.convertFrom), to: getCode(value) }, function(d, s, x){
-                console.log(d);
-                data.rate = JSON.parse(d).rate.toFixed(4);
-                var i =data.rate * data.amount;
-                data.equivalent = i.toFixed(2);
-                console.log(data.amount);
-              });
-            }
-          },
-
-          amount: function(value){
-            var i = value * data.rate;
-            data.equivalent = i.toFixed(2);
-          }
         }
     })
-
-
 </script>
 
 

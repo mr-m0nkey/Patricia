@@ -7,7 +7,7 @@ include_once('assets/include/validation.php');
 if(isset($_SESSION['user_id'])){
     header('location: dashboard/index.php');
 }
-
+$_SESSION['login_err'] = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if(isset($_POST['submit'])) {
     $email = test_input(filter_input(INPUT_POST, 'email'));
